@@ -8,7 +8,7 @@
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/exemplo" prefix_auto="1" extension_auto="1" />
-				<Option working_dir="C:/Users/20161bsi0349/Desktop/glutCB/bin" />
+				<Option working_dir="../Bibliotecas/glutCB/bin" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
