@@ -10,3 +10,9 @@
 	<GL/gl.h>
 	<GL/glu.h>
 
+1523562350 source:c:\users\andre.martins\documents\github\te.computacao.grafica\glut\exemplo\main.cpp
+	<GLUT/glut.h>
+	<windows.h>
+	<GL/glut.h>
+	<stdlib.h>
+
