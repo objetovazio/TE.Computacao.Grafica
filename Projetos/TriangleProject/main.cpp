@@ -22,6 +22,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <string>
+#include <iostream>
+
 
 static int slices = 16;
 static int stacks = 16;
@@ -157,6 +160,7 @@ int main(int argc, char *argv[])
 {
     FILE *fl = openFile("../bunny.msh");
     char line[255];
+    int vertices, normais;
 
     if(fl == NULL)
     {
@@ -165,14 +169,24 @@ int main(int argc, char *argv[])
     }
 
     fscanf(fl, "%s", line);
-    printf("1 : %s\n", line );
-
+    vertices = atoi(line);
 
     fscanf(fl, "%s", line);
-    printf("2 : %s\n", line );
+    normais = atoi(line);
 
+    float *arrVertices = (float *)malloc(vertices * 7 * sizeof(float));
 
+    for(int i = 0; i < vertices; i++){
+        fscanf(fl, "%s", line);
+        float row = atof(line);
+        for(float j = 0; j < 6; j++){
+            fscanf(fl, "%s", line);
+            arrVertices[row][j] = atof(line);
+        }
+    }
 
+    free(arrVertices);
+/*
     glutInit(&argc, argv);
     glutInitWindowSize(640,480);
     glutInitWindowPosition(10,10);
@@ -208,6 +222,6 @@ int main(int argc, char *argv[])
     glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
 
     glutMainLoop();
-
+*/
     return EXIT_SUCCESS;
 }
