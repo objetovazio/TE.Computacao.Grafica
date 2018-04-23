@@ -149,6 +149,16 @@ static FILE* openFile(char *fileName)
     return fl;
 }
 
+/* Recupera Valores Vertices */
+static void preencher_vertices(FILE* fl, GLfloat* vertices, GLfloat* normais, qtdVertices){
+    char line[255];
+
+    for(int i = 0; i < qtdVertices; i++){
+        int id = at
+
+    }
+}
+
 /*
 get path
 char cwd[1024];
@@ -160,7 +170,7 @@ int main(int argc, char *argv[])
 {
     FILE *fl = openFile("../bunny.msh");
     char line[255];
-    int vertices, normais;
+    int qtdVertices, incidencia;
 
     if(fl == NULL)
     {
@@ -169,23 +179,18 @@ int main(int argc, char *argv[])
     }
 
     fscanf(fl, "%s", line);
-    vertices = atoi(line);
+    qtdVertices = atoi(line);
 
     fscanf(fl, "%s", line);
-    normais = atoi(line);
+    incidencia = atoi(line);
 
-    float *arrVertices = (float *)malloc(vertices * 7 * sizeof(float));
+    GLfloat* vertices = (GLfloat*) malloc( qtdVertices * 3 * sizeof(GLfloat) ); // allocate memory for array
+    GLfloat* normals = (GLfloat*) malloc( qtdVertices * 3 * sizeof(GLfloat) ); // allocate memory for array
+    GLubyte* indices = (GLubyte*) malloc( incidencia * 3 * sizeof(GLubyte) ); // allocate memory for array
 
-    for(int i = 0; i < vertices; i++){
-        fscanf(fl, "%s", line);
-        float row = atof(line);
-        for(float j = 0; j < 6; j++){
-            fscanf(fl, "%s", line);
-            arrVertices[row][j] = atof(line);
-        }
-    }
+    preencher_vertices(fl, vertices, normals, qtdVertices);
 
-    free(arrVertices);
+
 /*
     glutInit(&argc, argv);
     glutInitWindowSize(640,480);

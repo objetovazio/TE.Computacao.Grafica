@@ -12,7 +12,7 @@
 	<GL/gl.h>
 	<GL/glu.h>
 
-1524368224 source:c:\users\andré martins\documents\github\te.computacao.grafica\projetos\triangleproject\main.cpp
+1524409336 source:c:\users\andré martins\documents\github\te.computacao.grafica\projetos\triangleproject\main.cpp
 	<GLUT/glut.h>
 	<windows.h>
 	<GL/glut.h>
@@ -21,4 +21,17 @@
 	<unistd.h>
 	<string>
 	<iostream>
+	"list.h"
+
+1422620820 source:c:\users\andré martins\documents\github\te.computacao.grafica\projetos\triangleproject\list.c
+	"list.h"
+
+1422620820 c:\users\andré martins\documents\github\te.computacao.grafica\projetos\triangleproject\list.h
+	<stdlib.h>
+
+1422620820 source:c:\users\andré martins\documents\github\te.computacao.grafica\projetos\triangleproject\list_iterator.c
+	"list.h"
+
+1422620820 source:c:\users\andré martins\documents\github\te.computacao.grafica\projetos\triangleproject\list_node.c
+	"list.h"
 
