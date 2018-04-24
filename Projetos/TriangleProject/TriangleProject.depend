@@ -35,3 +35,23 @@
 1422620820 source:c:\users\andré martins\documents\github\te.computacao.grafica\projetos\triangleproject\list_node.c
 	"list.h"
 
+1524543313 source:c:\users\andre\desktop\github\te.computacao.grafica\projetos\triangleproject\main.cpp
+	<GLUT/glut.h>
+	<windows.h>
+	<glut.h>
+	<stdlib.h>
+	<stdio.h>
+	<unistd.h>
+	<string>
+	<iostream>
+
+1524541693 source:c:\users\andre\desktop\github\te.computacao.grafica\projetos\triangleproject\casa.cpp
+	<windows.h>
+	<stdlib.h>
+	<glut.h>
+
+1524542735 source:c:\users\andre\desktop\github\te.computacao.grafica\projetos\triangleproject\viewports.cpp
+	<stdlib.h>
+	<glut.h>
+	<windows.h>
+
