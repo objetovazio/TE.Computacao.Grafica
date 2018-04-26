@@ -76,23 +76,16 @@ static void display(void)
         glVertex3f(3, 0, 0);
     glEnd();*/
 
-    int i = 0;
-    while(i < incidencia){
-        glBegin(GL_TRIANGLES);
-            for(int j = 0; j < 9; j += 3){
-                glNormal3f(normais[(indices[i] * 3) + j], normais[(indices[i] * 3) + j + 1], normais[(indices[i] * 3) + j + 2]);
-                glVertex3f(vertices[(indices[i] * 3) + j], vertices[(indices[i] * 3) + j + 1], vertices[(indices[i] * 3) + j + 2]);
-            }
-        glEnd();
+    printf("%d inc\n", incidencia);
 
-   /*    printf("vertice: %.5f %.5f %.5f normais: %.5f %.5f %.5f\n", vertices[indices[i]], vertices[indices[i] + 1], vertices[indices[i] + 2], normais[indices[i]], normais[indices[i] + 1], normais[indices[i] + 2]);
+    printf("%f", vertices[59487]);
 
-        printf("vertice: %.5f %.5f %.5f normais: %.5f %.5f %.5f\n", vertices[i], vertices[i + 1], vertices[i + 2], normais[i], normais[i + 1], normais[i + 2]);
-
-        scanf("%s", &line);*/
-
-        i += 9;
-    }
+    glBegin(GL_TRIANGLES);
+        for(int i = 0; i < incidencia; i++){
+            glNormal3f(normais[(indices[i] * 3) + 0], normais[(indices[i] * 3) + 1], normais[(indices[i] * 3) + 2]);
+            glVertex3f(vertices[(indices[i] * 3) + 0], vertices[(indices[i] * 3) + 1], vertices[(indices[i] * 3) + 2]);
+        }
+    glEnd();
 
     glutSwapBuffers();
 }
@@ -243,7 +236,7 @@ int main(int argc, char *argv[])
     glutKeyboardFunc(key);
 
     glClearColor(1,1,1,1);
-   /* glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 
     glEnable(GL_DEPTH_TEST);
@@ -263,7 +256,7 @@ int main(int argc, char *argv[])
     glMaterialfv(GL_FRONT, GL_DIFFUSE,   mat_diffuse);
     glMaterialfv(GL_FRONT, GL_SPECULAR,  mat_specular);
     glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
-*/
+
     glutMainLoop();
 
 
