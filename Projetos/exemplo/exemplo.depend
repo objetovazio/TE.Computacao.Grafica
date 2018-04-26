@@ -5,7 +5,7 @@
 	<GL/glut.h>
 	<stdlib.h>
 
-976659772 c:\users\20161bsi0349\desktop\glutcb\include\gl\glut.h
+1523015487 c:\users\20161bsi0349\desktop\glutcb\include\gl\glut.h
 	<windows.h>
 	<GL/gl.h>
 	<GL/glu.h>
@@ -17,6 +17,12 @@
 	<stdlib.h>
 
 1523562350 source:c:\users\andre.martins\documents\github\te.computacao.grafica\projetos\exemplo\main.cpp
+	<GLUT/glut.h>
+	<windows.h>
+	<GL/glut.h>
+	<stdlib.h>
+
+1524749023 source:c:\users\20161bsi0349\desktop\te.computacao.grafica\projetos\exemplo\main.cpp
 	<GLUT/glut.h>
 	<windows.h>
 	<GL/glut.h>

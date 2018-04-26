@@ -27,7 +27,8 @@
 
 GLfloat* vertices;
 GLfloat* normais;
-GLubyte* indices;
+GLuint* indices;
+
 int qtdVertices = 0, incidencia = 0;
 static int slices = 16;
 static int stacks = 16;
@@ -40,7 +41,7 @@ const GLfloat light_position[] = { 2.0f, 5.0f, 5.0f, 0.0f };
 const GLfloat mat_ambient[]    = { 0.7f, 0.7f, 0.7f, 1.0f };
 const GLfloat mat_diffuse[]    = { 0.8f, 0.8f, 0.8f, 1.0f };
 const GLfloat mat_specular[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
-const GLfloat high_shininess[] = { 100.0f };
+const GLfloat high_shininess[] = { 50.0f };
 
 
 
@@ -63,31 +64,37 @@ static void display(void)
 {
     const double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
     const double a = t*90.0;
+    char line[255];
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glColor3d(1,1,0);
+    glColor3d(1,0,0);
+    glTranslated(0, 0, -3);
+
+    /*glBegin(GL_TRIANGLES);
+        glVertex3f(-3, 0, 0);
+        glVertex3f(0, 3, 0);
+        glVertex3f(3, 0, 0);
+    glEnd();*/
 
     int i = 0;
-    while(i < qtdVertices){
+    while(i < incidencia){
         glBegin(GL_TRIANGLES);
-            glPointSize(1.0f);
-
-            for(int j = 0; j < 9; j+= 3){
-                glNormal3f(normais[i + j], normais[i + j + 1], normais[i + j + 2]);
-                //printf("Normal: %.2f %.2f %.2f\n", normais[i + j], normais[i + j + 1], normais[i + j + 2]);
+            for(int j = 0; j < 9; j += 3){
+                glNormal3f(normais[(indices[i] * 3) + j], normais[(indices[i] * 3) + j + 1], normais[(indices[i] * 3) + j + 2]);
+                glVertex3f(vertices[(indices[i] * 3) + j], vertices[(indices[i] * 3) + j + 1], vertices[(indices[i] * 3) + j + 2]);
             }
-
-            for(int j = 0; j < 9; j+= 3){
-                glVertex3f(vertices[i + j], vertices[i + j + 1], vertices[i + j + 2]);
-                //printf("Vertice: %.2f %.2f %.2f ", vertices[i + j], vertices[i + j + 1], vertices[i + j + 2]);
-            }
-
-
         glEnd();
+
+   /*    printf("vertice: %.5f %.5f %.5f normais: %.5f %.5f %.5f\n", vertices[indices[i]], vertices[indices[i] + 1], vertices[indices[i] + 2], normais[indices[i]], normais[indices[i] + 1], normais[indices[i] + 2]);
+
+        printf("vertice: %.5f %.5f %.5f normais: %.5f %.5f %.5f\n", vertices[i], vertices[i + 1], vertices[i + 2], normais[i], normais[i + 1], normais[i + 2]);
+
+        scanf("%s", &line);*/
+
         i += 9;
     }
 
-    glFlush();
+    glutSwapBuffers();
 }
 
 static void key(unsigned char key, int x, int y)
@@ -132,7 +139,8 @@ static FILE* openFile(char *fileName)
 }
 
 /* Recupera Valores Vertices */
-static void preencher_vertices(FILE* fl){
+static void preencher_vertices(FILE* fl)
+{
     char line[255];
 
     for(int i = 0; i < qtdVertices; i++){
@@ -158,7 +166,8 @@ static void preencher_vertices(FILE* fl){
 }
 
 // Recupera indices
-static void preencher_indices(FILE* fl){
+static void preencher_indices(FILE* fl)
+{
     char line[255];
 
     for(int i = 0; i < incidencia; i++){
@@ -167,14 +176,15 @@ static void preencher_indices(FILE* fl){
 
         for(int j = 0; j < 3; j++){
             fscanf(fl, "%s", line);
-            float val = atof(line);
+            int val = atoi(line);
 
             indices[(i * 3) + j] = val;
         }
     }
 }
 
-static void prepara_variaveis(FILE *fl){
+static void prepara_variaveis(FILE *fl)
+{
     char line[255];
 
     fscanf(fl, "%s", line);
@@ -185,7 +195,7 @@ static void prepara_variaveis(FILE *fl){
 
     vertices = (GLfloat*) malloc( qtdVertices * 3 * sizeof(GLfloat) ); // allocate memory for array
     normais = (GLfloat*) malloc( qtdVertices * 3 * sizeof(GLfloat) ); // allocate memory for array
-    indices = (GLubyte*) malloc( incidencia * 3 * sizeof(GLubyte) ); // allocate memory for array
+    indices = (GLuint*) malloc( incidencia * 3 * sizeof(GLuint) ); // allocate memory for array
 
     preencher_vertices(fl);
     preencher_indices(fl);
@@ -194,23 +204,21 @@ static void prepara_variaveis(FILE *fl){
 static void draw()
 {
     glEnableClientState(GL_NORMAL_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
 
     glNormalPointer(GL_FLOAT, 0, normais);
     glVertexPointer(3, GL_FLOAT, 0, vertices);
 
     glPushMatrix();
-    glTranslatef(-2, -2, 0);
+    glTranslatef(0, 0, -6);
 
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_BYTE, indices);
+    glDrawElements(GL_TRIANGLES, incidencia*3, GL_UNSIGNED_INT, indices);
 
     glPopMatrix();
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
 }
-
 
 /* Program entry point */
 int main(int argc, char *argv[])
@@ -225,7 +233,7 @@ int main(int argc, char *argv[])
 
     prepara_variaveis(fl);
 
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
     glutInitWindowPosition(5,5);
     glutInitWindowSize(640,480);
     glutCreateWindow("Little Bunny");
@@ -234,9 +242,30 @@ int main(int argc, char *argv[])
     glutReshapeFunc(resize);
     glutKeyboardFunc(key);
 
-    glClearColor(0,1,1,1);
+    glClearColor(1,1,1,1);
+   /* glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
 
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
+    glEnable(GL_LIGHT0);
+    glEnable(GL_NORMALIZE);
+    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_LIGHTING);
+
+    glLightfv(GL_LIGHT0, GL_AMBIENT,  light_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE,  light_diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+    glMaterialfv(GL_FRONT, GL_AMBIENT,   mat_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE,   mat_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR,  mat_specular);
+    glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
+*/
     glutMainLoop();
+
 
     return EXIT_SUCCESS;
 }
