@@ -156,20 +156,30 @@ static void draw()
     glDisableClientState(GL_NORMAL_ARRAY);
 }
 
-static void key(unsigned char key, int x, int y)
+static void key(unsigned char key, int x1, int y1)
 {
     switch (key)
     {
         case 'q':
             exit(0);
             break;
-        case 'w':
-            z++;
-            printf("mudei z para: %d", z);
-            break;
         case 's':
+            z++;
+            break;
+        case 'w':
             z--;
-            printf("mudei z para: %d", z);
+            break;
+        case 'a':
+            x--;
+            break;
+        case 'd':
+            x++;
+            break;
+        case 'e':
+            y++;
+            break;
+        case 'c':
+            y--;
             break;
         case 'r':
             if(isGlBegin){
