@@ -28,3 +28,11 @@
 	<GL/glut.h>
 	<stdlib.h>
 
+1525047188 source:c:\users\andré martins\documents\github\te.computacao.grafica\projetos\exemplo\main.cpp
+	<cstdlib>
+	<iostream>
+	<GL/gl.h>
+	<GL/glut.h>
+	<stdlib.h>
+	<stdio.h>
+

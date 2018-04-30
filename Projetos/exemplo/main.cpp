@@ -22,11 +22,11 @@
 
 #include <stdlib.h>
 
-static int slices = 5;
-static int stacks = 5;
+static int slices = 56;
+static int stacks = 56;
+
 
 /* GLUT callback Handlers */
-
 static void resize(int width, int height)
 {
     const float ar = (float) width / (float) height;
@@ -136,7 +136,6 @@ const GLfloat mat_specular[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
 const GLfloat high_shininess[] = { 50.0f };
 
 /* Program entry point */
-
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
