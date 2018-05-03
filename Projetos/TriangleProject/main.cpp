@@ -150,6 +150,9 @@ static void display(void)
     strcat(showing, fpsx);
     printtext(10, 10, wid, hei, showing);
 
+    printtext(10, 460, wid, hei, "Press WASD to move. Press E to UP. Press C to DOWN");
+    printtext(10, 440, wid, hei, "Press R to switch between DrawElements and GLBewgin.");
+
     glutSwapBuffers();
 }
 
