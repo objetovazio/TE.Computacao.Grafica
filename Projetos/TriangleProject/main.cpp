@@ -30,8 +30,11 @@ GLfloat* normais;
 GLuint* indices;
 
 
-bool isGlBegin = false;
+bool isGlBegin = true;
 int x, y, z;
+int wid = 640;
+int hei = 480;
+
 
 int qtdVertices = 0, incidencia = 0;
 
@@ -45,24 +48,7 @@ const GLfloat mat_diffuse[]    = { 0.8f, 0.8f, 0.8f, 1.0f };
 const GLfloat mat_specular[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
 const GLfloat high_shininess[] = { 50.0f };
 
-GLint gFramesPerSecond = 0;
-
-void FPS(void) {
-  static GLint Frames = 0;         // frames averaged over 1000mS
-  static GLuint Clock;             // [milliSeconds]
-  static GLuint PreviousClock = 0; // [milliSeconds]
-  static GLuint NextClock = 0;     // [milliSeconds]
-
-  ++Frames;
-  Clock = glutGet(GLUT_ELAPSED_TIME); //has limited resolution, so average over 1000mS
-  if ( Clock < NextClock ) return;
-
-  gFramesPerSecond = Frames/1; // store the averaged number of frames per second
-
-  PreviousClock = Clock;
-  NextClock = Clock+1000; // 1000mS=1S in the future
-  Frames=0;
-}
+double T = 0, t1 = 0, t2 = 0;
 
 void printtext(int x, int y, int w, int h, char *str)
 {
@@ -103,20 +89,8 @@ static void resize(int width, int height)
     glLoadIdentity() ;
 }
 
-static void display(void)
-{
-    char fpsx[3];
-    char showing[10] = "FPS: ";
 
-    const double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
-    const double a = t*90.0;
-    char line[255];
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //printf("FPS %d\n",gFramesPerSecond);
-
-    glColor3d(1,0,0);
-
+static void drawBunnyGlBegin(double a){
     glPushMatrix();
         glTranslated(x, y, z);
         glRotated(-a,0,1,0);
@@ -129,17 +103,10 @@ static void display(void)
         glEnd();
     glPopMatrix();
 
-    sprintf(fpsx, "%d", gFramesPerSecond);
-    strcat(showing, fpsx);
-    printtext(0, 1, 12, 12, showing);
-
-    glutSwapBuffers();
+    printtext(500, 10, wid, hei, "GLBegin");
 }
 
-static void draw()
-{
-    printf("DrawElements");
-
+static void drawBunnyGlDrawElements(double a){
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
 
@@ -149,11 +116,41 @@ static void draw()
     glPushMatrix();
         glColor3d(0,0,1);
         glTranslated(x, y, z);
+        glRotated(a,0,1,0);
         glDrawElements(GL_TRIANGLES, incidencia * 3, GL_UNSIGNED_INT, indices);
     glPopMatrix();
 
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
+
+    printtext(500, 10, wid, hei, "DrawElements");
+}
+
+static void display(void)
+{
+    char fpsx[3];
+    char showing[10] = "FPS: ";
+
+    const double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
+    const double a = t*90.0;
+    char line[255];
+
+    t1 = t2;
+    t2 = t;
+    T = t2 - t1;
+    double fps = 1/T;
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glColor3d(1,0,0);
+
+    if(isGlBegin) drawBunnyGlBegin(a);
+    else drawBunnyGlDrawElements(a);
+
+    sprintf(fpsx, "%.1f", fps);
+    strcat(showing, fpsx);
+    printtext(10, 10, wid, hei, showing);
+
+    glutSwapBuffers();
 }
 
 static void key(unsigned char key, int x1, int y1)
@@ -179,16 +176,14 @@ static void key(unsigned char key, int x1, int y1)
             y++;
             break;
         case 'c':
-            y--;
+            y-- ;
             break;
         case 'r':
             if(isGlBegin){
-                glutDisplayFunc(display);
                 isGlBegin = false;
             }
             else {
-                    glutDisplayFunc(draw);
-                    isGlBegin = true;
+                isGlBegin = true;
             }
             break;
     }
@@ -197,19 +192,6 @@ static void key(unsigned char key, int x1, int y1)
 
 static void idle(void)
 {
-    #define REGULATE_FPS
-    #ifdef REGULATE_FPS
-    static GLuint PreviousClock=glutGet(GLUT_ELAPSED_TIME);
-    static GLuint Clock=glutGet(GLUT_ELAPSED_TIME);
-    static GLfloat deltaT;
-
-    Clock = glutGet(GLUT_ELAPSED_TIME);
-    deltaT=Clock-PreviousClock;
-    if (deltaT < 35) {return;} else {PreviousClock=Clock;}
-    #endif
-
-    //printf(".");
-    FPS(); //only call once per frame loop
     glutPostRedisplay();
 }
 
@@ -304,7 +286,7 @@ int main(int argc, char *argv[])
     prepara_variaveis(fl);
 
     glutInit(&argc, argv);
-    glutInitWindowSize(640,480);
+    glutInitWindowSize(wid,hei);
     glutInitWindowPosition(10,10);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 
