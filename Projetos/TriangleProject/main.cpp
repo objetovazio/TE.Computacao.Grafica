@@ -31,10 +31,11 @@ GLuint* indices;
 
 
 bool isGlBegin = true;
-int x, y, z;
-int wid = 640;
-int hei = 480;
-
+double x, y, z;
+int wid = 800;
+int hei = 600;
+bool isJumping = false;
+double jumpStart;
 
 int qtdVertices = 0, incidencia = 0;
 
@@ -89,9 +90,19 @@ static void resize(int width, int height)
     glLoadIdentity() ;
 }
 
+static void jumping(double how){
+    if(isJumping && y - jumpStart < 3){
+        y += how;
+    }
+    else if(isJumping && y - jumpStart >= 3) isJumping = false;
+    else if(!isJumping && jumpStart < y && jumpStart != 0 ){
+        y -= how;
+    }
+}
 
 static void drawBunnyGlBegin(double a){
     glPushMatrix();
+        jumping(0.09);
         glTranslated(x, y, z);
         glRotated(-a,0,1,0);
 
@@ -103,7 +114,7 @@ static void drawBunnyGlBegin(double a){
         glEnd();
     glPopMatrix();
 
-    printtext(500, 10, wid, hei, "GLBegin");
+    printtext(700, 10, wid, hei, "GLBegin");
 }
 
 static void drawBunnyGlDrawElements(double a){
@@ -115,6 +126,7 @@ static void drawBunnyGlDrawElements(double a){
 
     glPushMatrix();
         glColor3d(0,0,1);
+        jumping(0.03);
         glTranslated(x, y, z);
         glRotated(a,0,1,0);
         glDrawElements(GL_TRIANGLES, incidencia * 3, GL_UNSIGNED_INT, indices);
@@ -123,7 +135,7 @@ static void drawBunnyGlDrawElements(double a){
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
 
-    printtext(500, 10, wid, hei, "DrawElements");
+    printtext(700, 10, wid, hei, "DrawElements");
 }
 
 static void display(void)
@@ -150,8 +162,9 @@ static void display(void)
     strcat(showing, fpsx);
     printtext(10, 10, wid, hei, showing);
 
-    printtext(10, 460, wid, hei, "Press WASD to move. Press E to UP. Press C to DOWN");
-    printtext(10, 440, wid, hei, "Press R to switch between DrawElements and GLBewgin.");
+    printtext(10, 580, wid, hei, "Press WASD to move. Press E to UP. Press C to DOWN");
+    printtext(10, 560, wid, hei, "Press R to switch between DrawElements and GLBewgin.");
+    printtext(10, 540, wid, hei, "PRESS SPACE TO JUMP!!!");
 
     glutSwapBuffers();
 }
@@ -189,7 +202,14 @@ static void key(unsigned char key, int x1, int y1)
                 isGlBegin = true;
             }
             break;
+        case 32:
+            if(!isJumping){
+                isJumping = true;
+                jumpStart = y;
+            }
+            break;
     }
+
     glutPostRedisplay();
 }
 
@@ -265,7 +285,7 @@ static void prepara_variaveis(FILE *fl)
 
     x = 0;
     y = -1;
-    z = -3;
+    z = -5;
 
     vertices = (GLfloat*) malloc( qtdVertices * 3 * sizeof(GLfloat) ); // allocate memory for array
     normais = (GLfloat*) malloc( qtdVertices * 3 * sizeof(GLfloat) ); // allocate memory for array
