@@ -1,0 +1,12 @@
+Abrir projeto no codeblocks normalmente e executar a main.
+A biblioteca GLUT deve estar devidamente configurada e importada neste projeto.
+
+Caso haja algum problema, baixe o repositório no link seguinte. Nele há o projeto e o Codeblocks devidamente configurado para execução deste projeto da maneira correta.
+https://github.com/objetovazio/TE.Computacao.Grafica
+
+Caso o MinGW não esteja configurado corretamente, abra o Codeblocks, clique em Settings > Compiler e depois na aba Toolchain Executables.
+Após isso clique no botão "..." e selecione o diretório do MinGW que se encontra dentro da pasta do Codeblocks do repositório do link anterior.
+
+
+É isto :)
+		- André Martins.
