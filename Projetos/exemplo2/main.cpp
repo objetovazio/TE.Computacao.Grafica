@@ -25,11 +25,14 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <glm/geometric.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/mat4x4.hpp>
 
 struct Camera {
     glm::vec3 pos; // Posição da camera
     glm::vec3 dir; // Direlçao da camera
     glm::vec3 up; // Direlçao da camera
+    float angularSpeed;
     float speed; // Velocidade da camera
 };
 
@@ -122,6 +125,9 @@ static void display(void)
 
 static void key(unsigned char key, int x, int y)
 {
+    glm::mat4 rotUp;
+    glm::vec4 newDir;
+
     switch (key)
     {
         case 's':
@@ -170,9 +176,20 @@ static void key(unsigned char key, int x, int y)
         case '8':
              cam.pos  = cam.pos - cam.speed * cam.up;
              break;
-         case '2':
+        case '2':
              cam.pos  = cam.pos + cam.speed * cam.up;
              break;
+        case '4':
+            rotUp = glm::rotate(glm::mat4(1.0), cam.angularSpeed, cam.up);
+            newDir = rotUp * glm::vec4(cam.dir, 1.0);
+            cam.dir = newDir;
+            break;
+        case '6':
+            rotUp = glm::rotate(glm::mat4(1.0), -cam.angularSpeed, cam.up);
+            newDir = rotUp * glm::vec4(cam.dir, 1.0);
+            cam.dir = newDir;
+            break;
+
     }
 
     glutPostRedisplay();
@@ -256,6 +273,7 @@ int main(int argc, char *argv[])
     cam.dir = glm::vec3(0, 0, -1);
     cam.up = glm::vec3(0, 1, 0);
     cam.speed = 1;
+    cam.angularSpeed = 0.1;
 
     glutMainLoop();
 
