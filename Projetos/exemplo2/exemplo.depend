@@ -1,0 +1,30 @@
+# depslib dependency file v1.0
+1526645062 source:c:\users\20161bsi0349\desktop\glut\exemplo\main.cpp
+	<GLUT/glut.h>
+	<windows.h>
+	<GL/glut.h>
+	<stdlib.h>
+	<stdio.h>
+	<glm/vec4.hpp>
+
+1523015487 c:\users\20161bsi0349\desktop\glutcb\include\gl\glut.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1523015487 source:c:\users\20161bsi0349\desktop\te.computacao.grafica\glut\exemplo\main.cpp
+	<GLUT/glut.h>
+	<windows.h>
+	<GL/glut.h>
+	<stdlib.h>
+
+1526647916 source:c:\users\20161bsi0349\desktop\te.computacao.grafica\projetos\exemplo2\main.cpp
+	<GLUT/glut.h>
+	<windows.h>
+	<GL/glut.h>
+	<stdlib.h>
+	<stdio.h>
+	<glm/vec3.hpp>
+	<glm/vec4.hpp>
+	<glm/geometric.hpp>
+
