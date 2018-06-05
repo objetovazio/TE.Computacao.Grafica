@@ -25,10 +25,18 @@
 #include <string>
 #include <iostream>
 
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
+#include <glm/geometric.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/mat4x4.hpp>
+#include "SceneObject.h"
+
 GLfloat* vertices;
 GLfloat* normais;
 GLuint* indices;
 
+SceneObject *camera = new SceneObject();
 
 bool isGlBegin = true;
 double x, y, z;
@@ -173,7 +181,7 @@ static void key(unsigned char key, int x1, int y1)
 {
     switch (key)
     {
-        case 'q':
+         case 'q':
             exit(0);
             break;
         case 's':
@@ -208,9 +216,38 @@ static void key(unsigned char key, int x1, int y1)
                 jumpStart = y;
             }
             break;
+        case '4':
+            //rotUp = glm::rotate(glm::mat4(1.0), cam.angularSpeed, cam.up);
+            //newDir = rotUp * glm::vec4(cam.dir, 1.0);
+            //cam.dir = newDir;
+            break;
+        case '6':
+            //rotUp = glm::rotate(glm::mat4(1.0), -cam.angularSpeed, cam.up);
+            //newDir = rotUp * glm::vec4(cam.dir, 1.0);
+            //cam.dir = newDir;
+            break;
     }
 
     glutPostRedisplay();
+}
+
+void special(int key, int x, int y){
+    //glm::vec3 side = glm::cross(cam.dir, cam.up);
+
+     switch (key) {
+         case GLUT_KEY_UP:
+             //cam.pos  = cam.pos + cam.speed * cam.dir;
+             break;
+         case GLUT_KEY_DOWN:
+             //cam.pos  = cam.pos - cam.speed * cam.dir;
+             break;
+         case GLUT_KEY_LEFT:
+             //cam.pos  = cam.pos - cam.speed * side;
+             break;
+         case GLUT_KEY_RIGHT:
+             //cam.pos  = cam.pos + cam.speed * side;
+             break;
+     }
 }
 
 static void idle(void)
@@ -291,6 +328,12 @@ static void prepara_variaveis(FILE *fl)
     normais = (GLfloat*) malloc( qtdVertices * 3 * sizeof(GLfloat) ); // allocate memory for array
     indices = (GLuint*) malloc( incidencia * 3 * sizeof(GLuint) ); // allocate memory for array
 
+    camera->Setpos(glm::vec3(0, 0, 0));
+    camera->Setdir(glm::vec3(0, 0, -1));
+    camera->Setup(glm::vec3(0, 1, 0));
+    camera->Setspeed(1);
+    camera->SetangularSpeed(0.1);
+
     preencher_vertices(fl);
     preencher_indices(fl);
 }
@@ -298,7 +341,7 @@ static void prepara_variaveis(FILE *fl)
 /* Program entry point */
 int main(int argc, char *argv[])
 {
-    FILE *fl = openFile("../bunny.msh");
+    FILE *fl = openFile("../chair_chesterfield.msh");
 
     if(fl == NULL)
     {

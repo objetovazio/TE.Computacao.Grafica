@@ -64,3 +64,29 @@
 	<string>
 	<iostream>
 
+1528239799 source:c:\users\cíci\documents\github\te.computacao.grafica\projetos\triangleproject\src\sceneobject.cpp
+	"SceneObject.h"
+
+1528241852 c:\users\cíci\documents\github\te.computacao.grafica\projetos\triangleproject\include\sceneobject.h
+	<glm/vec3.hpp>
+	<glm/vec4.hpp>
+	<glm/geometric.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<glm/mat4x4.hpp>
+
+1528242182 source:c:\users\cíci\documents\github\te.computacao.grafica\projetos\triangleproject\main.cpp
+	<GLUT/glut.h>
+	<windows.h>
+	<glut.h>
+	<stdlib.h>
+	<stdio.h>
+	<unistd.h>
+	<string>
+	<iostream>
+	<glm/vec3.hpp>
+	<glm/vec4.hpp>
+	<glm/geometric.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<glm/mat4x4.hpp>
+	"SceneObject.h"
+
