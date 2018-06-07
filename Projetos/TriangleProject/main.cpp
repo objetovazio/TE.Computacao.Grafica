@@ -30,13 +30,13 @@
 #include <glm/geometric.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/mat4x4.hpp>
-#include "SceneObject.h"
+#include "Camera.h"
 
 GLfloat* vertices;
 GLfloat* normais;
 GLuint* indices;
 
-SceneObject *camera = new SceneObject();
+Camera *camera = new Camera();
 
 bool isGlBegin = true;
 double x, y, z;
@@ -163,6 +163,16 @@ static void display(void)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glColor3d(1,0,0);
 
+    glLoadIdentity();
+    gluLookAt(camera->Getpos().x, camera->Getpos().y, camera->Getpos().z,
+              camera->GetCenter().x, camera->GetCenter().y, camera->GetCenter().z,
+              camera->Getup().x, camera->Getup().y, camera->Getup().z);
+
+    if(isGlBegin) drawBunnyGlBegin(a);
+    else drawBunnyGlDrawElements(a);
+
+    z = -z;
+
     if(isGlBegin) drawBunnyGlBegin(a);
     else drawBunnyGlDrawElements(a);
 
@@ -171,7 +181,7 @@ static void display(void)
     printtext(10, 10, wid, hei, showing);
 
     printtext(10, 580, wid, hei, "Press WASD to move. Press E to UP. Press C to DOWN");
-    printtext(10, 560, wid, hei, "Press R to switch between DrawElements and GLBewgin.");
+    printtext(10, 560, wid, hei, "Press R to switch between DrawElements and GLBegin.");
     printtext(10, 540, wid, hei, "PRESS SPACE TO JUMP!!!");
 
     glutSwapBuffers();
@@ -181,26 +191,20 @@ static void key(unsigned char key, int x1, int y1)
 {
     switch (key)
     {
-         case 'q':
+        case 'q':
             exit(0);
             break;
-        case 's':
-            z++;
-            break;
         case 'w':
-            z--;
+            camera->MoveUp();
             break;
-        case 'a':
-            x--;
+        case 's':
+            camera->MoveDown();
             break;
         case 'd':
-            x++;
+            camera->TurnRight();
             break;
-        case 'e':
-            y++;
-            break;
-        case 'c':
-            y-- ;
+        case 'a':
+            camera->TurnLeft();
             break;
         case 'r':
             if(isGlBegin){
@@ -216,36 +220,24 @@ static void key(unsigned char key, int x1, int y1)
                 jumpStart = y;
             }
             break;
-        case '4':
-            //rotUp = glm::rotate(glm::mat4(1.0), cam.angularSpeed, cam.up);
-            //newDir = rotUp * glm::vec4(cam.dir, 1.0);
-            //cam.dir = newDir;
-            break;
-        case '6':
-            //rotUp = glm::rotate(glm::mat4(1.0), -cam.angularSpeed, cam.up);
-            //newDir = rotUp * glm::vec4(cam.dir, 1.0);
-            //cam.dir = newDir;
-            break;
     }
 
     glutPostRedisplay();
 }
 
 void special(int key, int x, int y){
-    //glm::vec3 side = glm::cross(cam.dir, cam.up);
-
      switch (key) {
          case GLUT_KEY_UP:
-             //cam.pos  = cam.pos + cam.speed * cam.dir;
+             camera->MoveFoward();
              break;
          case GLUT_KEY_DOWN:
-             //cam.pos  = cam.pos - cam.speed * cam.dir;
+             camera->MoveBackward();
              break;
          case GLUT_KEY_LEFT:
-             //cam.pos  = cam.pos - cam.speed * side;
+             camera->MoveLeft();
              break;
          case GLUT_KEY_RIGHT:
-             //cam.pos  = cam.pos + cam.speed * side;
+             camera->MoveRight();
              break;
      }
 }
@@ -361,6 +353,7 @@ int main(int argc, char *argv[])
     glutDisplayFunc(display);
     glutReshapeFunc(resize);
     glutKeyboardFunc(key);
+    glutSpecialFunc(special);
     glutIdleFunc(idle);
 
     glClearColor(1,1,1,1);
