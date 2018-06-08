@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <string>
 #include <iostream>
+#include <vector>
 
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
@@ -31,21 +32,16 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/mat4x4.hpp>
 #include "Camera.h"
-
-GLfloat* vertices;
-GLfloat* normais;
-GLuint* indices;
+#include "SceneObject.h"
 
 Camera *camera = new Camera();
+std::vector<SceneObject*> *listSceneObject = new std::vector<SceneObject*>;
 
 bool isGlBegin = true;
-double x, y, z;
 int wid = 800;
 int hei = 600;
 bool isJumping = false;
 double jumpStart;
-
-int qtdVertices = 0, incidencia = 0;
 
 const GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
 const GLfloat light_diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -98,6 +94,7 @@ static void resize(int width, int height)
     glLoadIdentity() ;
 }
 
+/*
 static void jumping(double how){
     if(isJumping && y - jumpStart < 3){
         y += how;
@@ -106,8 +103,9 @@ static void jumping(double how){
     else if(!isJumping && jumpStart < y && jumpStart != 0 ){
         y -= how;
     }
-}
+}*/
 
+/*
 static void drawBunnyGlBegin(double a){
     glPushMatrix();
         jumping(0.09);
@@ -145,6 +143,7 @@ static void drawBunnyGlDrawElements(double a){
 
     printtext(700, 10, wid, hei, "DrawElements");
 }
+*/
 
 static void display(void)
 {
@@ -168,13 +167,11 @@ static void display(void)
               camera->GetCenter().x, camera->GetCenter().y, camera->GetCenter().z,
               camera->Getup().x, camera->Getup().y, camera->Getup().z);
 
-    if(isGlBegin) drawBunnyGlBegin(a);
-    else drawBunnyGlDrawElements(a);
-
-    z = -z;
-
-    if(isGlBegin) drawBunnyGlBegin(a);
-    else drawBunnyGlDrawElements(a);
+    for(int i = 0; i < listSceneObject->size(); i++)
+    {
+        SceneObject* so = listSceneObject->at(i);
+        so->draw(false);
+    }
 
     sprintf(fpsx, "%.1f", fps);
     strcat(showing, fpsx);
@@ -212,12 +209,6 @@ static void key(unsigned char key, int x1, int y1)
             }
             else {
                 isGlBegin = true;
-            }
-            break;
-        case 32:
-            if(!isJumping){
-                isJumping = true;
-                jumpStart = y;
             }
             break;
     }
@@ -258,7 +249,7 @@ static FILE* openFile(char *fileName)
 }
 
 /* Recupera Valores Vertices */
-static void preencher_vertices(FILE* fl)
+static void preencher_vertices(FILE* fl, GLfloat* vertices, GLfloat* normais, int qtdVertices)
 {
     char line[255];
 
@@ -285,7 +276,7 @@ static void preencher_vertices(FILE* fl)
 }
 
 // Recupera indices
-static void preencher_indices(FILE* fl)
+static void preencher_indices(FILE* fl, GLuint* indices, int incidencia)
 {
     char line[255];
 
@@ -302,32 +293,40 @@ static void preencher_indices(FILE* fl)
     }
 }
 
-static void prepara_variaveis(FILE *fl)
+static SceneObject* prepara_variaveis(FILE *fl)
 {
     char line[255];
 
     fscanf(fl, "%s", line);
-    qtdVertices = atoi(line);
+    int qtdVertices = atoi(line);
 
     fscanf(fl, "%s", line);
-    incidencia = atoi(line);
+    int incidencia = atoi(line);
 
-    x = 0;
-    y = -1;
-    z = -5;
+    GLfloat* vertices = (GLfloat*) malloc( qtdVertices * 3 * sizeof(GLfloat) ); // allocate memory for array
+    GLfloat* normais = (GLfloat*) malloc( qtdVertices * 3 * sizeof(GLfloat) ); // allocate memory for array
+    GLuint* indices = (GLuint*) malloc( incidencia * 3 * sizeof(GLuint) ); // allocate memory for array
 
-    vertices = (GLfloat*) malloc( qtdVertices * 3 * sizeof(GLfloat) ); // allocate memory for array
-    normais = (GLfloat*) malloc( qtdVertices * 3 * sizeof(GLfloat) ); // allocate memory for array
-    indices = (GLuint*) malloc( incidencia * 3 * sizeof(GLuint) ); // allocate memory for array
+    preencher_vertices(fl, vertices, normais, qtdVertices);
+    preencher_indices(fl, indices, incidencia);
 
+    glm::vec3 posicao = glm::vec3(0, 0, 0);
+    glm::vec3 cor = glm::vec3(0, 0, 0);
+    glm::vec3 corSelect = glm::vec3(0, 0, 0);
+
+    SceneObject *so =
+        new SceneObject(posicao, cor, corSelect, vertices, normais, indices, incidencia, qtdVertices);
+
+    listSceneObject->push_back(so);
+}
+
+static void StartCamera()
+{
     camera->Setpos(glm::vec3(0, 0, 0));
     camera->Setdir(glm::vec3(0, 0, -1));
     camera->Setup(glm::vec3(0, 1, 0));
     camera->Setspeed(1);
     camera->SetangularSpeed(0.1);
-
-    preencher_vertices(fl);
-    preencher_indices(fl);
 }
 
 /* Program entry point */
