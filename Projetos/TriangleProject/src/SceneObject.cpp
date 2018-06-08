@@ -43,3 +43,24 @@ void SceneObject::draw(bool isSelection)
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
 }
+
+void SceneObject::printObject()
+{
+    for(int i = 0; i < this->GetIncidencia(); i = i + 3){
+
+    int x, y, z;
+    x = this->GetIndices()[i];
+    y = this->GetIndices()[i] + 1;
+    z = (this->GetIndices()[i] + 2);
+
+    printf("vertice: %.5f %.5f %.5f normais: %.5f %.5f %.5f\n", this->GetVertices()[x],
+           this->GetVertices()[y],
+           this->GetVertices()[z],
+           this->GetNormais()[x],
+           this->GetNormais()[y],
+           this->GetNormais()[z]);
+    }
+
+    /*printf("vertice: %.5f %.5f %.5f normais: %.5f %.5f %.5f\n", vertices[i], vertices[i + 1], vertices[i + 2], normais[i], normais[i + 1], normais[i + 2]);
+    printf("%d inc\n", incidencia);*/
+}
