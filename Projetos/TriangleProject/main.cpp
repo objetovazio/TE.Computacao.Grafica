@@ -170,7 +170,7 @@ static void display(void)
     for(int i = 0; i < listSceneObject->size(); i++)
     {
         SceneObject* so = listSceneObject->at(i);
-        so->printObject();
+       // so->printObject();
         so->draw(false);
     }
 
@@ -321,7 +321,7 @@ static SceneObject* prepara_variaveis(FILE *fl)
     preencher_indices(fl, indices, incidencia);
 
     glm::vec3 posicao = glm::vec3(0, -1, 5);
-    glm::vec3 cor = glm::vec3(0.1, 0.1, 0.1);
+    glm::vec3 cor = glm::vec3(255, 0, 0);
     glm::vec3 corSelect = glm::vec3(0.1, 0.1, 0.1);
 
     SceneObject *so =
@@ -342,7 +342,7 @@ static void StartCamera()
 /* Program entry point */
 int main(int argc, char *argv[])
 {
-    FILE *fl = openFile("../chair_chesterfield.msh");
+    FILE *fl = openFile("../bunny.msh");
 
     if(fl == NULL)
     {

@@ -34,10 +34,10 @@ void SceneObject::draw(bool isSelection)
     glVertexPointer(3, GL_FLOAT, 0, this->GetVertices());
 
     glPushMatrix();
-    glColor3f(thisColor.r, thisColor.g, thisColor.b);
-    glTranslated(this->GetPosition().x, this->GetPosition().y, this->GetPosition().z);
-    //glRotated(a, 0, 1, 0);
-    glDrawElements(GL_TRIANGLES, this->GetIncidencia(), GL_UNSIGNED_INT, this->GetIndices());
+        glColor3d(thisColor.r, thisColor.g, thisColor.b);
+        glTranslated(this->GetPosition().x, this->GetPosition().y, this->GetPosition().z);
+        //glRotated(a, 0, 1, 0);
+        glDrawElements(GL_TRIANGLES, this->GetIncidencia(), GL_UNSIGNED_INT, this->GetIndices());
     glPopMatrix();
 
     glDisableClientState(GL_VERTEX_ARRAY);
