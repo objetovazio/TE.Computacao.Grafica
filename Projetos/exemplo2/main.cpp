@@ -25,15 +25,12 @@
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
 #include <glm/geometric.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/mat4x4.hpp>
 
 struct Camera
 {
     glm::vec3 pos; // Posição da camera
     glm::vec3 dir; // Direlçao da camera
     glm::vec3 up; // Direlçao da camera
-    float angularSpeed;
     float speed; // Velocidade da camera
 };
 
@@ -126,11 +123,9 @@ static void display(void)
 
 static void key(unsigned char key, int x, int y)
 {
-    glm::mat4 rotUp;
-    glm::vec4 newDir;
-
     switch (key)
     {
+<<<<<<< HEAD
     case 's':
         cam.speed *= 1.1;
         printf("%f ", cam.speed);
@@ -191,6 +186,57 @@ static void key(unsigned char key, int x, int y)
         cam.dir = newDir;
         break;
 
+=======
+        case 's':
+            cam.speed *= 1.1;
+            printf("%f ", cam.speed);
+            break;
+        case 'x':
+            cam.speed *= 0.9;
+            printf("%f ", cam.speed);
+            break;
+
+        case 27 :
+        case 'q':
+            exit(0);
+            break;
+
+        case '+':
+            slices++;
+            stacks++;
+            break;
+
+        case '-':
+            if (slices>3 && stacks>3)
+            {
+                slices--;
+                stacks--;
+            }
+            break;
+        case 'a':
+        case 'A':
+            flovy += 15;
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            gluPerspective(flovy, arx, 2.0, 100.0);
+            glMatrixMode(GL_MODELVIEW);
+            break;
+        case 'z':
+        case 'Z':
+            flovy -= 15;
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            gluPerspective(flovy, arx, 2.0, 100.0);
+            glMatrixMode(GL_MODELVIEW);
+            break;
+
+        case '8':
+             cam.pos  = cam.pos - cam.speed * cam.up;
+             break;
+         case '2':
+             cam.pos  = cam.pos + cam.speed * cam.up;
+             break;
+>>>>>>> parent of fb85049... rotacionando em vetor up
     }
 
     glutPostRedisplay();
@@ -276,7 +322,6 @@ int main(int argc, char *argv[])
     cam.dir = glm::vec3(0, 0, -1);
     cam.up = glm::vec3(0, 1, 0);
     cam.speed = 1;
-    cam.angularSpeed = 0.1;
 
     glutMainLoop();
 
