@@ -122,20 +122,20 @@ static void drawBunnyGlBegin(double a){
 
     printtext(700, 10, wid, hei, "GLBegin");
 }
-
-static void drawBunnyGlDrawElements(double a){
+*/
+static void drawBunnyGlDrawElements(double a, SceneObject* so){
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
 
-    glNormalPointer(GL_FLOAT, 0, normais);
-    glVertexPointer(3, GL_FLOAT, 0, vertices);
+    glNormalPointer(GL_FLOAT, 0, so->GetNormais());
+    glVertexPointer(3, GL_FLOAT, 0, so->GetVertices());
 
     glPushMatrix();
         glColor3d(0,0,1);
-        jumping(0.03);
-        glTranslated(x, y, z);
+//        jumping(0.03);
+        glTranslated(so->GetPosition().x, so->GetPosition().y, so->GetPosition().z);
         glRotated(a,0,1,0);
-        glDrawElements(GL_TRIANGLES, incidencia * 3, GL_UNSIGNED_INT, indices);
+        glDrawElements(GL_TRIANGLES, so->GetIncidencia(), GL_UNSIGNED_INT, so->GetIndices());
     glPopMatrix();
 
     glDisableClientState(GL_VERTEX_ARRAY);
@@ -143,7 +143,7 @@ static void drawBunnyGlDrawElements(double a){
 
     printtext(700, 10, wid, hei, "DrawElements");
 }
-*/
+
 
 static void display(void)
 {
@@ -167,9 +167,11 @@ static void display(void)
               camera->GetCenter().x, camera->GetCenter().y, camera->GetCenter().z,
               camera->Getup().x, camera->Getup().y, camera->Getup().z);
 
+    //drawBunnyGlDrawElements(a, listSceneObject->at(0));
     for(int i = 0; i < listSceneObject->size(); i++)
     {
         SceneObject* so = listSceneObject->at(i);
+        //so->printObject();
         so->draw(false);
     }
 
@@ -188,49 +190,53 @@ static void key(unsigned char key, int x1, int y1)
 {
     switch (key)
     {
-        case 'q':
-            exit(0);
-            break;
-        case 'w':
-            camera->MoveUp();
-            break;
-        case 's':
-            camera->MoveDown();
-            break;
-        case 'd':
-            camera->TurnRight();
-            break;
-        case 'a':
-            camera->TurnLeft();
-            break;
-        case 'r':
-            if(isGlBegin){
-                isGlBegin = false;
-            }
-            else {
-                isGlBegin = true;
-            }
-            break;
+    case 'q':
+        exit(0);
+        break;
+    case 'w':
+        camera->MoveUp();
+        break;
+    case 's':
+        camera->MoveDown();
+        break;
+    case 'd':
+        camera->TurnRight();
+        break;
+    case 'a':
+        camera->TurnLeft();
+        break;
+    case 'r':
+        if(isGlBegin)
+        {
+            isGlBegin = false;
+        }
+        else
+        {
+            isGlBegin = true;
+        }
+        break;
     }
 
     glutPostRedisplay();
 }
 
-void special(int key, int x, int y){
-     switch (key) {
-         case GLUT_KEY_UP:
-             camera->MoveFoward();
-             break;
-         case GLUT_KEY_DOWN:
-             camera->MoveBackward();
-             break;
-         case GLUT_KEY_LEFT:
-             camera->MoveLeft();
-             break;
-         case GLUT_KEY_RIGHT:
-             camera->MoveRight();
-             break;
-     }
+void special(int key, int x, int y)
+{
+    switch (key)
+    {
+    case GLUT_KEY_UP:
+        camera->MoveFoward();
+        break;
+    case GLUT_KEY_DOWN:
+        camera->MoveBackward();
+        break;
+    case GLUT_KEY_LEFT:
+        camera->MoveLeft();
+        break;
+    case GLUT_KEY_RIGHT:
+        camera->MoveRight();
+        break;
+    }
 }
 
 static void idle(void)
@@ -253,20 +259,23 @@ static void preencher_vertices(FILE* fl, GLfloat* vertices, GLfloat* normais, in
 {
     char line[255];
 
-    for(int i = 0; i < qtdVertices; i++){
+    for(int i = 0; i < qtdVertices; i++)
+    {
         fscanf(fl, "%s", line);
         int id = atoi(line);
 
         //1 v1 v2 v3 n1 n2 n3
 
-        for(int j = 0; j < 3; j++){
+        for(int j = 0; j < 3; j++)
+        {
             fscanf(fl, "%s", line);
             float val = atof(line);
 
             vertices[(i * 3) + j] = val;
         }
 
-        for(int j = 0; j < 3; j++){
+        for(int j = 0; j < 3; j++)
+        {
             fscanf(fl, "%s", line);
             float val = atof(line);
 
@@ -280,11 +289,13 @@ static void preencher_indices(FILE* fl, GLuint* indices, int incidencia)
 {
     char line[255];
 
-    for(int i = 0; i < incidencia; i++){
+    for(int i = 0; i < incidencia; i++)
+    {
         fscanf(fl, "%s", line);
         int id = atoi(line);
 
-        for(int j = 0; j < 3; j++){
+        for(int j = 0; j < 3; j++)
+        {
             fscanf(fl, "%s", line);
             int val = atoi(line);
 
@@ -310,9 +321,9 @@ static SceneObject* prepara_variaveis(FILE *fl)
     preencher_vertices(fl, vertices, normais, qtdVertices);
     preencher_indices(fl, indices, incidencia);
 
-    glm::vec3 posicao = glm::vec3(0, 0, 0);
-    glm::vec3 cor = glm::vec3(0, 0, 0);
-    glm::vec3 corSelect = glm::vec3(0, 0, 0);
+    glm::vec3 posicao = glm::vec3(0, -1, 5);
+    glm::vec3 cor = glm::vec3(255, 0, 0);
+    glm::vec3 corSelect = glm::vec3(0.1, 0.1, 0.1);
 
     SceneObject *so =
         new SceneObject(posicao, cor, corSelect, vertices, normais, indices, incidencia, qtdVertices);
@@ -332,12 +343,12 @@ static void StartCamera()
 /* Program entry point */
 int main(int argc, char *argv[])
 {
-    FILE *fl = openFile("../chair_chesterfield.msh");
+    FILE *fl = openFile("../bunny.msh");
 
     if(fl == NULL)
     {
-      printf("Error!");
-      exit(1);
+        printf("Error!");
+        exit(1);
     }
 
     prepara_variaveis(fl);

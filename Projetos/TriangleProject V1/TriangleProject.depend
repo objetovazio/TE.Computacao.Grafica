@@ -1,0 +1,76 @@
+# depslib dependency file v1.0
+1523566692 source:c:\users\andre.martins\documents\github\te.computacao.grafica\projetos\triangleproject\main.cpp
+	<GLUT/glut.h>
+	<windows.h>
+	<GL/glut.h>
+	<stdlib.h>
+	<stdio.h>
+	<unistd.h>
+
+1523562350 c:\users\andre.martins\documents\github\te.computacao.grafica\projetos\bibliotecas\glutcb\include\gl\glut.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1525403095 source:c:\users\andré martins\documents\github\te.computacao.grafica\projetos\triangleproject\main.cpp
+	<GLUT/glut.h>
+	<windows.h>
+	<glut.h>
+	<stdlib.h>
+	<stdio.h>
+	<unistd.h>
+	<string>
+	<iostream>
+
+1422620820 source:c:\users\andré martins\documents\github\te.computacao.grafica\projetos\triangleproject\list.c
+	"list.h"
+
+1422620820 c:\users\andré martins\documents\github\te.computacao.grafica\projetos\triangleproject\list.h
+	<stdlib.h>
+
+1422620820 source:c:\users\andré martins\documents\github\te.computacao.grafica\projetos\triangleproject\list_iterator.c
+	"list.h"
+
+1422620820 source:c:\users\andré martins\documents\github\te.computacao.grafica\projetos\triangleproject\list_node.c
+	"list.h"
+
+1524543313 source:c:\users\andre\desktop\github\te.computacao.grafica\projetos\triangleproject\main.cpp
+	<GLUT/glut.h>
+	<windows.h>
+	<glut.h>
+	<stdlib.h>
+	<stdio.h>
+	<unistd.h>
+	<string>
+	<iostream>
+
+1524541693 source:c:\users\andre\desktop\github\te.computacao.grafica\projetos\triangleproject\casa.cpp
+	<windows.h>
+	<stdlib.h>
+	<glut.h>
+
+1524542735 source:c:\users\andre\desktop\github\te.computacao.grafica\projetos\triangleproject\viewports.cpp
+	<stdlib.h>
+	<glut.h>
+	<windows.h>
+
+1525358749 source:c:\users\20161bsi0349\desktop\te.computacao.grafica\projetos\triangleproject\main.cpp
+	<GLUT/glut.h>
+	<windows.h>
+	<glut.h>
+	<stdlib.h>
+	<stdio.h>
+	<unistd.h>
+	<string>
+	<iostream>
+
+1525403710 source:c:\users\andre\desktop\github\te.computacao.grafica\projetos\triangleproject v1\main.cpp
+	<GLUT/glut.h>
+	<windows.h>
+	<glut.h>
+	<stdlib.h>
+	<stdio.h>
+	<unistd.h>
+	<string>
+	<iostream>
+

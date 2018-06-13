@@ -46,8 +46,10 @@
 			<Add directory="C:/Users/andre.martins/Documents/GitHub/TE.Computacao.Grafica/Projetos/Bibliotecas/glutCB/lib" />
 		</Linker>
 		<Unit filename="include/Camera.h" />
+		<Unit filename="include/SceneObject.h" />
 		<Unit filename="main.cpp" />
 		<Unit filename="src/Camera.cpp" />
+		<Unit filename="src/SceneObject.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
