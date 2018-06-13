@@ -26,8 +26,7 @@
 #include <glm/vec4.hpp>
 #include <glm/geometric.hpp>
 
-struct Camera
-{
+struct Camera {
     glm::vec3 pos; // Posição da camera
     glm::vec3 dir; // Direlçao da camera
     glm::vec3 up; // Direlçao da camera
@@ -76,45 +75,45 @@ static void display(void)
               cam.up.x, cam.up.y, cam.up.z);
 
     glPushMatrix();
-    glTranslated(-2.4,1.2,-10);
-    glRotated(60,1,0,0);
-    glRotated(a,0,0,1);
-    glutSolidSphere(1,slices,stacks);
+        glTranslated(-2.4,1.2,-10);
+        glRotated(60,1,0,0);
+        glRotated(a,0,0,1);
+        glutSolidSphere(1,slices,stacks);
     glPopMatrix();
 
     glPushMatrix();
-    glTranslated(0,1.2,-6);
-    glRotated(60,1,0,0);
-    glRotated(a,0,0,1);
-    glutSolidCone(1,1,slices,stacks);
+        glTranslated(0,1.2,-6);
+        glRotated(60,1,0,0);
+        glRotated(a,0,0,1);
+        glutSolidCone(1,1,slices,stacks);
     glPopMatrix();
 
     glPushMatrix();
-    glTranslated(2.4,1.2,-6);
-    glRotated(60,1,0,0);
-    glRotated(a,0,0,1);
-    glutSolidTorus(0.2,0.8,slices,stacks);
+        glTranslated(2.4,1.2,-6);
+        glRotated(60,1,0,0);
+        glRotated(a,0,0,1);
+        glutSolidTorus(0.2,0.8,slices,stacks);
     glPopMatrix();
 
     glPushMatrix();
-    glTranslated(-2.4,-1.2,-6);
-    glRotated(60,1,0,0);
-    glRotated(a,0,0,1);
-    glutWireSphere(1,slices,stacks);
+        glTranslated(-2.4,-1.2,-6);
+        glRotated(60,1,0,0);
+        glRotated(a,0,0,1);
+        glutWireSphere(1,slices,stacks);
     glPopMatrix();
 
     glPushMatrix();
-    glTranslated(0,-1.2,-6);
-    glRotated(60,1,0,0);
-    glRotated(a,0,0,1);
-    glutWireCone(1,1,slices,stacks);
+        glTranslated(0,-1.2,-6);
+        glRotated(60,1,0,0);
+        glRotated(a,0,0,1);
+        glutWireCone(1,1,slices,stacks);
     glPopMatrix();
 
     glPushMatrix();
-    glTranslated(2.4,-1.2,-6);
-    glRotated(60,1,0,0);
-    glRotated(a,0,0,1);
-    glutWireTorus(0.2,0.8,slices,stacks);
+        glTranslated(2.4,-1.2,-6);
+        glRotated(60,1,0,0);
+        glRotated(a,0,0,1);
+        glutWireTorus(0.2,0.8,slices,stacks);
     glPopMatrix();
 
     glutSwapBuffers();
@@ -125,6 +124,7 @@ static void key(unsigned char key, int x, int y)
 {
     switch (key)
     {
+<<<<<<< HEAD
 <<<<<<< HEAD
     case 's':
         cam.speed *= 1.1;
@@ -185,6 +185,67 @@ static void key(unsigned char key, int x, int y)
         newDir = rotUp * glm::vec4(cam.dir, 1.0);
         cam.dir = newDir;
         break;
+=======
+        case 's':
+            cam.speed *= 1.1;
+            printf("%f ", cam.speed);
+            break;
+        case 'x':
+            cam.speed *= 0.9;
+            printf("%f ", cam.speed);
+            break;
+
+        case 27 :
+        case 'q':
+            exit(0);
+            break;
+
+        case '+':
+            slices++;
+            stacks++;
+            break;
+
+        case '-':
+            if (slices>3 && stacks>3)
+            {
+                slices--;
+                stacks--;
+            }
+            break;
+        case 'a':
+        case 'A':
+            flovy += 15;
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            gluPerspective(flovy, arx, 2.0, 100.0);
+            glMatrixMode(GL_MODELVIEW);
+            break;
+        case 'z':
+        case 'Z':
+            flovy -= 15;
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            gluPerspective(flovy, arx, 2.0, 100.0);
+            glMatrixMode(GL_MODELVIEW);
+            break;
+
+        case '8':
+             cam.pos  = cam.pos - cam.speed * cam.up;
+             break;
+        case '2':
+             cam.pos  = cam.pos + cam.speed * cam.up;
+             break;
+        case '4':
+            rotUp = glm::rotate(glm::mat4(1.0), cam.angularSpeed, cam.up);
+            newDir = rotUp * glm::vec4(cam.dir, 1.0);
+            cam.dir = newDir;
+            break;
+        case '6':
+            rotUp = glm::rotate(glm::mat4(1.0), -cam.angularSpeed, cam.up);
+            newDir = rotUp * glm::vec4(cam.dir, 1.0);
+            cam.dir = newDir;
+            break;
+>>>>>>> parent of b1bcdd2... Printing helper
 
 =======
         case 's':
@@ -242,25 +303,23 @@ static void key(unsigned char key, int x, int y)
     glutPostRedisplay();
 }
 
-void special(int key, int x, int y)
-{
+void special(int key, int x, int y){
     glm::vec3 side = glm::cross(cam.dir, cam.up);
 
-    switch (key)
-    {
-    case GLUT_KEY_UP:
-        cam.pos  = cam.pos + cam.speed * cam.dir;
-        break;
-    case GLUT_KEY_DOWN:
-        cam.pos  = cam.pos - cam.speed * cam.dir;
-        break;
-    case GLUT_KEY_LEFT:
-        cam.pos  = cam.pos - cam.speed * side;
-        break;
-    case GLUT_KEY_RIGHT:
-        cam.pos  = cam.pos + cam.speed * side;
-        break;
-    }
+     switch (key) {
+         case GLUT_KEY_UP:
+             cam.pos  = cam.pos + cam.speed * cam.dir;
+             break;
+         case GLUT_KEY_DOWN:
+             cam.pos  = cam.pos - cam.speed * cam.dir;
+             break;
+         case GLUT_KEY_LEFT:
+             cam.pos  = cam.pos - cam.speed * side;
+             break;
+         case GLUT_KEY_RIGHT:
+             cam.pos  = cam.pos + cam.speed * side;
+             break;
+     }
 }
 
 

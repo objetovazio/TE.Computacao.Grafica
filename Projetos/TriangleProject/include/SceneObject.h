@@ -7,7 +7,6 @@
 #include <glut.h>
 #endif
 #include <glm/vec3.hpp>
-#include <stdio.h>
 
 class SceneObject
 {
@@ -44,7 +43,6 @@ class SceneObject
         void SetQuantidadeVertices(int val) { QuantidadeVertices = val; }
 
         void draw(bool isSelection);
-        void printObject();
 
     protected:
 
