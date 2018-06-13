@@ -42,7 +42,7 @@
 1422620820 source:c:\users\andré martins\documents\github\te.computacao.grafica\projetos\triangleproject\list_node.c
 	"list.h"
 
-1528467808 source:c:\users\andre\desktop\github\te.computacao.grafica\projetos\triangleproject\main.cpp
+1528902987 source:c:\users\andre\desktop\github\te.computacao.grafica\projetos\triangleproject\main.cpp
 	<GLUT/glut.h>
 	<windows.h>
 	<glut.h>
@@ -121,7 +121,7 @@
 	<glm/geometric.hpp>
 	<glm/gtc/matrix_transform.hpp>
 
-1528860891 source:c:\users\andre\desktop\github\te.computacao.grafica\projetos\triangleproject\src\sceneobject.cpp
+1528903419 source:c:\users\andre\desktop\github\te.computacao.grafica\projetos\triangleproject\src\sceneobject.cpp
 	"SceneObject.h"
 
 1528656156 source:c:\users\andré martins\documents\github\te.computacao.grafica\projetos\triangleproject\src\camera.cpp

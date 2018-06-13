@@ -123,6 +123,7 @@ static void drawBunnyGlBegin(double a){
     printtext(700, 10, wid, hei, "GLBegin");
 }
 */
+/*
 static void drawBunnyGlDrawElements(double a, SceneObject* so){
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -142,7 +143,7 @@ static void drawBunnyGlDrawElements(double a, SceneObject* so){
     glDisableClientState(GL_NORMAL_ARRAY);
 
     printtext(700, 10, wid, hei, "DrawElements");
-}
+}*/
 
 
 static void display(void)
@@ -167,11 +168,9 @@ static void display(void)
               camera->GetCenter().x, camera->GetCenter().y, camera->GetCenter().z,
               camera->Getup().x, camera->Getup().y, camera->Getup().z);
 
-    //drawBunnyGlDrawElements(a, listSceneObject->at(0));
     for(int i = 0; i < listSceneObject->size(); i++)
     {
         SceneObject* so = listSceneObject->at(i);
-        //so->printObject();
         so->draw(false);
     }
 
@@ -179,9 +178,9 @@ static void display(void)
     strcat(showing, fpsx);
     printtext(10, 10, wid, hei, showing);
 
-    printtext(10, 580, wid, hei, "Press WASD to move. Press E to UP. Press C to DOWN");
-    printtext(10, 560, wid, hei, "Press R to switch between DrawElements and GLBegin.");
-    printtext(10, 540, wid, hei, "PRESS SPACE TO JUMP!!!");
+    //printtext(10, 580, wid, hei, "Press WASD to move. Press E to UP. Press C to DOWN");
+    //printtext(10, 560, wid, hei, "Press R to switch between DrawElements and GLBegin.");
+    //printtext(10, 540, wid, hei, "PRESS SPACE TO JUMP!!!");
 
     glutSwapBuffers();
 }
@@ -321,20 +320,22 @@ static SceneObject* prepara_variaveis(FILE *fl)
     preencher_vertices(fl, vertices, normais, qtdVertices);
     preencher_indices(fl, indices, incidencia);
 
-    glm::vec3 posicao = glm::vec3(0, -1, 5);
-    glm::vec3 cor = glm::vec3(255, 0, 0);
-    glm::vec3 corSelect = glm::vec3(0.1, 0.1, 0.1);
+    for(int i = 0; i < 3; i++){
+        glm::vec3 posicao = glm::vec3(0, -1, 5 + (i*4));
+        glm::vec3 cor = glm::vec3(200 + (i*10), i, 0);
+        glm::vec3 corSelect = glm::vec3(1 + i, 0, 0);
 
-    SceneObject *so =
-        new SceneObject(posicao, cor, corSelect, vertices, normais, indices, incidencia, qtdVertices);
+        SceneObject *so =
+            new SceneObject(posicao, cor, corSelect, vertices, normais, indices, incidencia, qtdVertices);
 
-    listSceneObject->push_back(so);
+        listSceneObject->push_back(so);
+    }
 }
 
 static void StartCamera()
 {
     camera->Setpos(glm::vec3(0, 0, 0));
-    camera->Setdir(glm::vec3(0, 0, -1));
+    camera->Setdir(glm::vec3(0, 0, 1));
     camera->Setup(glm::vec3(0, 1, 0));
     camera->Setspeed(1);
     camera->SetangularSpeed(0.1);
@@ -351,6 +352,7 @@ int main(int argc, char *argv[])
         exit(1);
     }
 
+    StartCamera();
     prepara_variaveis(fl);
 
     glutInit(&argc, argv);

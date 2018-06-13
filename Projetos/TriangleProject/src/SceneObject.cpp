@@ -34,8 +34,6 @@ void SceneObject::draw(bool isSelection)
 
     glVertexPointer(3, GL_FLOAT, 0, this->GetVertices());
 
-    printf("X: %.2f Y: %.2f Z: %.2f", this->GetPosition().x, this->GetPosition().y, this->GetPosition().z);
-
     glPushMatrix();
         glColor3d(thisColor.r, thisColor.g, thisColor.b);
         glTranslated(this->GetPosition().x, this->GetPosition().y, this->GetPosition().z);
@@ -64,6 +62,7 @@ void SceneObject::printObject()
            this->GetNormais()[z]);
     }
 
+    //printf("X: %.2f Y: %.2f Z: %.2f", this->GetPosition().x, this->GetPosition().y, this->GetPosition().z);
     /*printf("vertice: %.5f %.5f %.5f normais: %.5f %.5f %.5f\n", vertices[i], vertices[i + 1], vertices[i + 2], normais[i], normais[i + 1], normais[i + 2]);
     printf("%d inc\n", incidencia);*/
 }
