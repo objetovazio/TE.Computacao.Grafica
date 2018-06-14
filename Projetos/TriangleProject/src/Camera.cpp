@@ -72,22 +72,16 @@ void Camera::TurnMouseY(int diferenca)
     dir = rotUp * glm::vec4(dir, 1.0);
 }
 
-void Camera::ZoomIn(SceneObject* pivot)
+void Camera::ZoomIn(SceneObject* pivotPos)
 {
-    if(glm::distance(pos, (pos - speed/2 * dir)) > 2) pos  = pos + speed/2 * dir;
-    this->UpdateDirection(pivot->GetPosition());
-    this->UpdatePosition(pivot->GetPosition());
-
-    printf("%.6f\n", glm::distance(pos, (pos - speed/2 * dir)));
+    pos = pos + 0.1f * dir;
+    this->UpdateDirection(pivotPos->GetPosition());
 }
 
 void Camera::ZoomOut(SceneObject* pivot)
 {
-    printf("%.6f\n", glm::distance(pos, (pos - speed/2 * dir)));
+    pos = pos - 0.1f * dir;
     this->UpdateDirection(pivot->GetPosition());
-    this->UpdatePosition(pivot->GetPosition());
-
-    pos  = pos - speed/2 * dir;
 }
 
 void Camera::UpdatePosition(glm::vec3 pivotPos)

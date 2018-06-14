@@ -14,7 +14,7 @@ SceneControl::~SceneControl()
 
 glm::vec3 SceneControl::GetNewSelectColor()
 {
-    unsigned int r, g, b;
+    float r, g, b;
     if(this->Getr() <= 255){
         this->IncrementR();
     }
@@ -33,6 +33,10 @@ glm::vec3 SceneControl::GetNewSelectColor()
     r = this->Getr();
     g = this->Getg();
     b = this->Getb();
+
+    r = r / 255.0;
+    g = g / 255.0;
+    b = b / 255.0;
 
     glm::vec3 color = glm::vec3(r, g, b);
 

@@ -25,6 +25,7 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <time.h>
 
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
@@ -111,7 +112,9 @@ static void resize(int width, int height)
     glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glFrustum(-ar, ar, -1.0, 1.0, 1.0, 100.0);
+    //glFrustum(-ar, ar, -1.0, 1.0, 1.0, 100.0);
+
+    gluPerspective(60, ar, 0.1, 1000);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity() ;
@@ -119,14 +122,10 @@ static void resize(int width, int height)
 
 static void selectionMode()
 {
-    //TurnLight(false);
+    TurnLight(false);
 
     GLfloat resposta[4];
     GLint viewportCores[4];
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    //gluPerspective(fovy, ar, 0.1, 100.0);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity() ;
@@ -158,7 +157,6 @@ static void selectionMode()
         if(isEquals)
         {
             Sc->SetPivot(so);
-            Sc->SetSceneMode(2);
             break;
         }
     }
@@ -180,9 +178,10 @@ static void display(void)
     T = t2 - t1;
     double fps = 1/T;
 
-    if(Sc->GetSceneMode() == 1)
+    if(Sc->GetSceneMode() == 1 && Sc->GetMadeSelection())
     {
         selectionMode();
+        Sc->SetMadeSelection(false);
     }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -193,11 +192,13 @@ static void display(void)
               camera->GetCenter().x, camera->GetCenter().y, camera->GetCenter().z,
               camera->Getup().x, camera->Getup().y, camera->Getup().z);
 
+
     for(int i = 0; i < listSceneObject->size(); i++)
     {
         SceneObject* so = listSceneObject->at(i);
         so->draw(false);
     }
+
 
     sprintf(fpsx, "%.1f", fps);
     strcat(showing, fpsx);
@@ -210,11 +211,9 @@ static void display(void)
     strcat(angularSpeedMouse, asmValue);
     printtext(10, 580, wid, hei, angularSpeedMouse);
 
-    if(Sc->GetSceneMode() != 1)
-    {
-        glutSwapBuffers();
-        glutPostRedisplay();
-    }
+
+    glutSwapBuffers();
+    glutPostRedisplay();
 }
 
 static void key(unsigned char key, int x1, int y1)
@@ -294,6 +293,7 @@ void mouseButton(int button, int state, int x, int y)
             {
                 glm::vec3 mousePosition = glm::vec3(x, y, 0);
                 Sc->SetMousePosition(mousePosition);
+                Sc->SetMadeSelection(true);
             }
         }
     }
@@ -319,7 +319,6 @@ void mouseMove(int x, int y)
         if(Sc->GetSceneMode() == 2)
         {
             camera->UpdateDirection(Sc->GetPivot()->GetPosition());
-            //camera->Setdir(Sc->GetPivot()->GetPosition() - camera->Getpos());
         }
 
         camera->TurnMouseX(diferencaX);
@@ -328,7 +327,6 @@ void mouseMove(int x, int y)
         if (Sc->GetSceneMode() == 2)
         {
             camera->UpdatePosition(Sc->GetPivot()->GetPosition());
-            //camera->Setpos(Sc->GetPivot()->GetPosition() - camera->Getdir());
         }
 
         glm::vec3 mouseP = glm::vec3(x, y, 0);
@@ -454,7 +452,7 @@ static void StartCamera()
     camera->Setpos(glm::vec3(0, 1, 0));
     camera->Setdir(glm::vec3(0, 0, 1));
     camera->Setup(glm::vec3(0, 1, 0));
-    camera->Setspeed(1);
+    camera->Setspeed(0.5);
     camera->SetangularSpeed(0.005);
 }
 
@@ -467,17 +465,19 @@ int main(int argc, char *argv[])
     openFile("../chair_chesterfield.msh");
     openFile("../chair_chesterfield.msh");
     openFile("../bunny.msh");
+    //openFile("../DeLorean.msh");
 
     StartCamera();
 
     for(int i = 0; i < fileList->size(); i++)
     {
-        glm::vec3 posicao = glm::vec3((i+1) * 3, 0, (i+1) * 4);
+        glm::vec3 posicao = glm::vec3(rand() % 19 + (-9), 0, rand() % 10 + 1);
         prepara_variaveis(fileList->at(i), posicao);
         fclose(fileList->at(i));
     }
 
     Sc->SetPivot(listSceneObject->at(0));
+    Sc->SetMadeSelection(false);
 
     glutInit(&argc, argv);
     glutInitWindowSize(wid,hei);
@@ -503,15 +503,15 @@ int main(int argc, char *argv[])
 
     TurnLight(true);
 
-    /*glLightfv(GL_LIGHT0, GL_AMBIENT,  light_ambient);
+    glLightfv(GL_LIGHT0, GL_AMBIENT,  light_ambient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE,  light_diffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);*/
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
-    /*glMaterialfv(GL_FRONT, GL_AMBIENT,   mat_ambient);
+    glMaterialfv(GL_FRONT, GL_AMBIENT,   mat_ambient);
     glMaterialfv(GL_FRONT, GL_DIFFUSE,   mat_diffuse);
     glMaterialfv(GL_FRONT, GL_SPECULAR,  mat_specular);
-    glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);*/
+    glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
 
     glutMainLoop();
 

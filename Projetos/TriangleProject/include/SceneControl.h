@@ -17,9 +17,9 @@ class SceneControl
         int Getb() { return b; }
         void Setb(int val) { b = val; }
 
-        void IncrementR() { r+=5; }
-        void IncrementG() { g+=5; }
-        void IncrementB() { b+=5; }
+        void IncrementR() { r+=100; }
+        void IncrementG() { g+=100; }
+        void IncrementB() { b+=100; }
         glm::vec3 GetNewSelectColor();
 
         int GetSceneMode() { return SceneMode; }
@@ -27,18 +27,21 @@ class SceneControl
 
         glm::vec3 GetMousePosition() { return MousePosition; }
         void SetMousePosition(glm::vec3 val) { MousePosition = val; }
+        bool GetMadeSelection() { return madeSelection; }
+        bool SetMadeSelection(bool val) { madeSelection = val; }
 
         SceneObject* GetPivot() { return Pivot; }
         void SetPivot(SceneObject* val) { Pivot = val; }
     protected:
 
     private:
-        int r;
-        int g;
-        int b;
+        float r;
+        float g;
+        float b;
         int SceneMode;
         glm::vec3 MousePosition;
         SceneObject* Pivot;
+        bool madeSelection;
 };
 
 #endif // SCENECONTROL_H

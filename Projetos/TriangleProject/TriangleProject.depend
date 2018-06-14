@@ -81,7 +81,7 @@
 	<glut.h>
 	<windows.h>
 
-1525358749 source:c:\users\20161bsi0349\desktop\te.computacao.grafica\projetos\triangleproject\main.cpp
+1528990070 source:c:\users\20161bsi0349\desktop\te.computacao.grafica\projetos\triangleproject\main.cpp
 	<GLUT/glut.h>
 	<windows.h>
 	<glut.h>
@@ -90,6 +90,16 @@
 	<unistd.h>
 	<string>
 	<iostream>
+	<vector>
+	<time.h>
+	<glm/vec3.hpp>
+	<glm/vec4.hpp>
+	<glm/geometric.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<glm/mat4x4.hpp>
+	"Camera.h"
+	"SceneControl.h"
+	"SceneObject.h"
 
 1528239799 source:c:\users\cíci\documents\github\te.computacao.grafica\projetos\triangleproject\src\sceneobject.cpp
 	"SceneObject.h"
@@ -220,4 +230,31 @@
 
 1528929066 source:c:\users\andre.martins\documents\github\te.computacao.grafica\projetos\triangleproject\src\scenecontrol.cpp
 	"SceneControl.h"
+
+1528990086 source:c:\users\20161bsi0349\desktop\te.computacao.grafica\projetos\triangleproject\src\camera.cpp
+	"Camera.h"
+
+1528981237 c:\users\20161bsi0349\desktop\te.computacao.grafica\projetos\triangleproject\include\camera.h
+	<glm/vec3.hpp>
+	<glm/mat4x4.hpp>
+	<glm/geometric.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<SceneObject.h>
+
+1528981237 c:\users\20161bsi0349\desktop\te.computacao.grafica\projetos\triangleproject\include\sceneobject.h
+	<GLUT/glut.h>
+	<windows.h>
+	<glut.h>
+	<glm/vec3.hpp>
+	<stdio.h>
+
+1528986216 source:c:\users\20161bsi0349\desktop\te.computacao.grafica\projetos\triangleproject\src\scenecontrol.cpp
+	"SceneControl.h"
+
+1528988293 c:\users\20161bsi0349\desktop\te.computacao.grafica\projetos\triangleproject\include\scenecontrol.h
+	<glm/vec3.hpp>
+	"SceneObject.h"
+
+1528981237 source:c:\users\20161bsi0349\desktop\te.computacao.grafica\projetos\triangleproject\src\sceneobject.cpp
+	"SceneObject.h"
 
