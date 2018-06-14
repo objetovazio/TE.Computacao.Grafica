@@ -58,6 +58,26 @@ const GLfloat high_shininess[] = { 50.0f };
 
 double T = 0, t1 = 0, t2 = 0;
 
+
+void TurnLight(bool On)
+{
+    if(On)
+    {
+        glEnable(GL_LIGHT0);
+        glEnable(GL_NORMALIZE);
+        glEnable(GL_COLOR_MATERIAL);
+        glEnable(GL_LIGHTING);
+    }
+    else
+    {
+        glDisable(GL_LIGHT0);
+        glDisable(GL_NORMALIZE);
+        glDisable(GL_COLOR_MATERIAL);
+        glDisable(GL_LIGHTING);
+    }
+}
+
+
 void printtext(int x, int y, int w, int h, char *str)
 {
     //(x,y) is from the bottom left of the window
@@ -97,6 +117,55 @@ static void resize(int width, int height)
     glLoadIdentity() ;
 }
 
+static void selectionMode()
+{
+    //TurnLight(false);
+
+    GLfloat resposta[4];
+    GLint viewportCores[4];
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    //gluPerspective(fovy, ar, 0.1, 100.0);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity() ;
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glLoadIdentity();
+    gluLookAt(camera->Getpos().x, camera->Getpos().y, camera->Getpos().z,
+              camera->GetCenter().x, camera->GetCenter().y, camera->GetCenter().z,
+              camera->Getup().x, camera->Getup().y, camera->Getup().z);
+
+    for(int i = 0; i < listSceneObject->size(); i++)
+    {
+        SceneObject* so = listSceneObject->at(i);
+        so->draw(true);
+    }
+
+    glGetIntegerv(GL_VIEWPORT, viewportCores);
+
+    glReadPixels(Sc->GetMousePosition().x, viewportCores[3] - Sc->GetMousePosition().y, 1, 1, GL_RGBA, GL_FLOAT, &resposta);
+
+    glm::vec3 cores = glm::vec3(resposta[0], resposta[1], resposta[2]);
+
+    for(int i = 0; i < listSceneObject->size(); i++)
+    {
+        SceneObject* so = listSceneObject->at(i);
+        bool isEquals = so->compareColor(cores);
+
+        if(isEquals)
+        {
+            Sc->SetPivot(so);
+            Sc->SetSceneMode(2);
+            break;
+        }
+    }
+
+    TurnLight(true);
+}
+
 static void display(void)
 {
     char fpsx[3];
@@ -110,6 +179,11 @@ static void display(void)
     t2 = t;
     T = t2 - t1;
     double fps = 1/T;
+
+    if(Sc->GetSceneMode() == 1)
+    {
+        selectionMode();
+    }
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glColor3d(1,0,0);
@@ -136,7 +210,11 @@ static void display(void)
     strcat(angularSpeedMouse, asmValue);
     printtext(10, 580, wid, hei, angularSpeedMouse);
 
-    glutSwapBuffers();
+    if(Sc->GetSceneMode() != 1)
+    {
+        glutSwapBuffers();
+        glutPostRedisplay();
+    }
 }
 
 static void key(unsigned char key, int x1, int y1)
@@ -147,13 +225,15 @@ static void key(unsigned char key, int x1, int y1)
         exit(0);
         break;
     case 'a':
-        if(Sc->GetSceneMode() == 2){
+        if(Sc->GetSceneMode() == 2)
+        {
             camera->ZoomIn(Sc->GetPivot());
         }
         else camera->MoveUp();
         break;
     case 'z':
-        if(Sc->GetSceneMode() == 2){
+        if(Sc->GetSceneMode() == 2)
+        {
             camera->ZoomOut(Sc->GetPivot());
         }
         else camera->MoveDown();
@@ -206,7 +286,12 @@ void mouseButton(int button, int state, int x, int y)
         {
             if(Sc->GetSceneMode() == 3)
             {
-                camera->TurnLeft();
+                glm::vec3 mousePosition = glm::vec3(x, y, 0);
+                Sc->SetMousePosition(mousePosition);
+            }
+
+            if(Sc->GetSceneMode() == 1)
+            {
                 glm::vec3 mousePosition = glm::vec3(x, y, 0);
                 Sc->SetMousePosition(mousePosition);
             }
@@ -274,9 +359,13 @@ static FILE* openFile(char *fileName)
 }
 
 /* Recupera Valores Vertices */
-static void preencher_vertices(FILE* fl, GLfloat* vertices, GLfloat* normais, int qtdVertices)
+static void preencher_vertices(FILE* fl, GLfloat* vertices, GLfloat* normais, int qtdVertices,
+                               glm::vec3 maiorCoordenada, glm::vec3 menorCoordenada)
 {
     char line[255];
+
+    maiorCoordenada = glm::vec3(vertices[1], vertices[2], vertices[3]);
+    menorCoordenada = glm::vec3(vertices[1], vertices[2], vertices[3]);
 
     for(int i = 0; i < qtdVertices; i++)
     {
@@ -292,6 +381,14 @@ static void preencher_vertices(FILE* fl, GLfloat* vertices, GLfloat* normais, in
 
             vertices[(i * 3) + j] = val;
         }
+
+        if(vertices[(i * 3) + 0] > maiorCoordenada.x) maiorCoordenada.x = vertices[(i * 3) + 0];
+        if(vertices[(i * 3) + 0] > maiorCoordenada.y) maiorCoordenada.x = vertices[(i * 3) + 0];
+        if(vertices[(i * 3) + 0] > maiorCoordenada.z) maiorCoordenada.x = vertices[(i * 3) + 0];
+
+        if(vertices[(i * 3) + 0] < menorCoordenada.x) menorCoordenada.x = vertices[(i * 3) + 0];
+        if(vertices[(i * 3) + 0] < menorCoordenada.y) menorCoordenada.x = vertices[(i * 3) + 0];
+        if(vertices[(i * 3) + 0] < menorCoordenada.z) menorCoordenada.x = vertices[(i * 3) + 0];
 
         for(int j = 0; j < 3; j++)
         {
@@ -336,8 +433,10 @@ static SceneObject* prepara_variaveis(FILE *fl, glm::vec3 posicao)
     GLfloat* vertices = (GLfloat*) malloc( qtdVertices * 3 * sizeof(GLfloat) ); // allocate memory for array
     GLfloat* normais = (GLfloat*) malloc( qtdVertices * 3 * sizeof(GLfloat) ); // allocate memory for array
     GLuint* indices = (GLuint*) malloc( incidencia * 3 * sizeof(GLuint) ); // allocate memory for array
+    glm::vec3 maiorCoordenada;
+    glm::vec3 menorCoordenada;
 
-    preencher_vertices(fl, vertices, normais, qtdVertices);
+    preencher_vertices(fl, vertices, normais, qtdVertices, maiorCoordenada, menorCoordenada);
     preencher_indices(fl, indices, incidencia);
 
     //glm::vec3 posicao = glm::vec3(0, -1, 5);
@@ -345,7 +444,7 @@ static SceneObject* prepara_variaveis(FILE *fl, glm::vec3 posicao)
     glm::vec3 corSelect = Sc->GetNewSelectColor();
 
     SceneObject *so =
-        new SceneObject(posicao, cor, corSelect, vertices, normais, indices, incidencia, qtdVertices);
+        new SceneObject(posicao, cor, corSelect, vertices, normais, indices, incidencia, qtdVertices, maiorCoordenada - menorCoordenada);
 
     listSceneObject->push_back(so);
 }
@@ -402,20 +501,17 @@ int main(int argc, char *argv[])
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    glEnable(GL_LIGHT0);
-    glEnable(GL_NORMALIZE);
-    glEnable(GL_COLOR_MATERIAL);
-    glEnable(GL_LIGHTING);
+    TurnLight(true);
 
-    glLightfv(GL_LIGHT0, GL_AMBIENT,  light_ambient);
+    /*glLightfv(GL_LIGHT0, GL_AMBIENT,  light_ambient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE,  light_diffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);*/
 
-    glMaterialfv(GL_FRONT, GL_AMBIENT,   mat_ambient);
+    /*glMaterialfv(GL_FRONT, GL_AMBIENT,   mat_ambient);
     glMaterialfv(GL_FRONT, GL_DIFFUSE,   mat_diffuse);
     glMaterialfv(GL_FRONT, GL_SPECULAR,  mat_specular);
-    glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
+    glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);*/
 
     glutMainLoop();
 

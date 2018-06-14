@@ -10,19 +10,19 @@ class SceneControl
         SceneControl();
         virtual ~SceneControl();
 
-        unsigned int Getr() { return r; }
-        void Setr(unsigned int val) { r = val; }
-        unsigned int Getg() { return g; }
-        void Setg(unsigned int val) { g = val; }
-        unsigned int Getb() { return b; }
-        void Setb(unsigned int val) { b = val; }
+        int Getr() { return r; }
+        void Setr(int val) { r = val; }
+        int Getg() { return g; }
+        void Setg(int val) { g = val; }
+        int Getb() { return b; }
+        void Setb(int val) { b = val; }
 
-        void IncrementR() { r++; }
-        void IncrementG() { g++; }
-        void IncrementB() { b++; }
+        void IncrementR() { r+=5; }
+        void IncrementG() { g+=5; }
+        void IncrementB() { b+=5; }
         glm::vec3 GetNewSelectColor();
 
-        unsigned int GetSceneMode() { return SceneMode; }
+        int GetSceneMode() { return SceneMode; }
         void SetSceneMode(int val) { SceneMode = val; }
 
         glm::vec3 GetMousePosition() { return MousePosition; }
@@ -30,13 +30,12 @@ class SceneControl
 
         SceneObject* GetPivot() { return Pivot; }
         void SetPivot(SceneObject* val) { Pivot = val; }
-
     protected:
 
     private:
-        unsigned int r;
-        unsigned int g;
-        unsigned int b;
+        int r;
+        int g;
+        int b;
         int SceneMode;
         glm::vec3 MousePosition;
         SceneObject* Pivot;

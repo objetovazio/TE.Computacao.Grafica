@@ -6,7 +6,7 @@ SceneObject::SceneObject()
 }
 
 SceneObject::SceneObject(glm::vec3 Position, glm::vec3 Color, glm::vec3 SelectColor,
-                    GLfloat* Vertices,  GLfloat* Normais, GLuint* Indices, int Incidencia, int QuantidadeVertices)
+                    GLfloat* Vertices,  GLfloat* Normais, GLuint* Indices, int Incidencia, int QuantidadeVertices, glm::vec3 Center)
 {
     this->Position = Position;
     this->Color = Color;
@@ -16,6 +16,7 @@ SceneObject::SceneObject(glm::vec3 Position, glm::vec3 Color, glm::vec3 SelectCo
     this->Indices = Indices;
     this->Incidencia = Incidencia;
     this->QuantidadeVertices = QuantidadeVertices;
+    this->Center = Center;
 }
 
 SceneObject::~SceneObject()
@@ -35,7 +36,7 @@ void SceneObject::draw(bool isSelection)
     glVertexPointer(3, GL_FLOAT, 0, this->GetVertices());
 
     glPushMatrix();
-        glColor3d(thisColor.r, thisColor.g, thisColor.b);
+        glColor3f(thisColor.r, thisColor.g, thisColor.b);
         glTranslated(this->GetPosition().x, this->GetPosition().y, this->GetPosition().z);
         //glRotated(a, 0, 1, 0);
         glDrawElements(GL_TRIANGLES, this->GetIncidencia(), GL_UNSIGNED_INT, this->GetIndices());
@@ -65,4 +66,9 @@ void SceneObject::printObject()
     //printf("X: %.2f Y: %.2f Z: %.2f", this->GetPosition().x, this->GetPosition().y, this->GetPosition().z);
     /*printf("vertice: %.5f %.5f %.5f normais: %.5f %.5f %.5f\n", vertices[i], vertices[i + 1], vertices[i + 2], normais[i], normais[i + 1], normais[i + 2]);
     printf("%d inc\n", incidencia);*/
+}
+
+bool SceneObject::compareColor(glm::vec3 cores)
+{
+    return cores == this->GetSelectColor();
 }
