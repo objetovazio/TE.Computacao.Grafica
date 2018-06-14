@@ -1,11 +1,22 @@
 # depslib dependency file v1.0
-1523566692 source:c:\users\andre.martins\documents\github\te.computacao.grafica\projetos\triangleproject\main.cpp
+1528938904 source:c:\users\andre.martins\documents\github\te.computacao.grafica\projetos\triangleproject\main.cpp
 	<GLUT/glut.h>
 	<windows.h>
-	<GL/glut.h>
+	<glut.h>
 	<stdlib.h>
 	<stdio.h>
 	<unistd.h>
+	<string>
+	<iostream>
+	<vector>
+	<glm/vec3.hpp>
+	<glm/vec4.hpp>
+	<glm/geometric.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<glm/mat4x4.hpp>
+	"Camera.h"
+	"SceneControl.h"
+	"SceneObject.h"
 
 1523562350 c:\users\andre.martins\documents\github\te.computacao.grafica\projetos\bibliotecas\glutcb\include\gl\glut.h
 	<windows.h>
@@ -177,4 +188,36 @@
 
 1528672112 source:c:\github\te.computacao.grafica\projetos\triangleproject\src\sceneobject.cpp
 	"SceneObject.h"
+
+1528938125 source:c:\users\andre.martins\documents\github\te.computacao.grafica\projetos\triangleproject\src\camera.cpp
+	"Camera.h"
+
+1528938911 c:\users\andre.martins\documents\github\te.computacao.grafica\projetos\triangleproject\include\camera.h
+	<glm/vec3.hpp>
+	<glm/mat4x4.hpp>
+	<glm/geometric.hpp>
+	<glm/gtc/matrix_transform.hpp>
+	<SceneObject.h>
+
+1528931558 source:c:\users\andre.martins\documents\github\te.computacao.grafica\projetos\triangleproject\src\sceneobject.cpp
+	"SceneObject.h"
+
+1528931560 c:\users\andre.martins\documents\github\te.computacao.grafica\projetos\triangleproject\include\sceneobject.h
+	<GLUT/glut.h>
+	<windows.h>
+	<glut.h>
+	<glm/vec3.hpp>
+	<stdio.h>
+
+1524782239 c:\users\andre.martins\documents\github\te.computacao.grafica\projetos\bibliotecas\glutcb\include\glut.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
+1528934748 c:\users\andre.martins\documents\github\te.computacao.grafica\projetos\triangleproject\include\scenecontrol.h
+	<glm/vec3.hpp>
+	"SceneObject.h"
+
+1528929066 source:c:\users\andre.martins\documents\github\te.computacao.grafica\projetos\triangleproject\src\scenecontrol.cpp
+	"SceneControl.h"
 

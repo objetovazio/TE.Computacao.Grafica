@@ -32,10 +32,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/mat4x4.hpp>
 #include "Camera.h"
+#include "SceneControl.h"
 #include "SceneObject.h"
 
+SceneControl *Sc = new SceneControl();
 Camera *camera = new Camera();
 std::vector<SceneObject*> *listSceneObject = new std::vector<SceneObject*>;
+std::vector<FILE*> *fileList = new std::vector<FILE*>;
 
 bool isGlBegin = true;
 int wid = 800;
@@ -94,58 +97,6 @@ static void resize(int width, int height)
     glLoadIdentity() ;
 }
 
-/*
-static void jumping(double how){
-    if(isJumping && y - jumpStart < 3){
-        y += how;
-    }
-    else if(isJumping && y - jumpStart >= 3) isJumping = false;
-    else if(!isJumping && jumpStart < y && jumpStart != 0 ){
-        y -= how;
-    }
-}*/
-
-/*
-static void drawBunnyGlBegin(double a){
-    glPushMatrix();
-        jumping(0.09);
-        glTranslated(x, y, z);
-        glRotated(-a,0,1,0);
-
-        glBegin(GL_TRIANGLES);
-            for(int i = 0; i < incidencia * 3; i++){
-                glNormal3f(normais[(indices[i] * 3) + 0], normais[(indices[i] * 3) + 1], normais[(indices[i] * 3) + 2]);
-                glVertex3f(vertices[(indices[i] * 3) + 0], vertices[(indices[i] * 3) + 1], vertices[(indices[i] * 3) + 2]);
-            }
-        glEnd();
-    glPopMatrix();
-
-    printtext(700, 10, wid, hei, "GLBegin");
-}
-*/
-/*
-static void drawBunnyGlDrawElements(double a, SceneObject* so){
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glEnableClientState(GL_VERTEX_ARRAY);
-
-    glNormalPointer(GL_FLOAT, 0, so->GetNormais());
-    glVertexPointer(3, GL_FLOAT, 0, so->GetVertices());
-
-    glPushMatrix();
-        glColor3d(0,0,1);
-//        jumping(0.03);
-        glTranslated(so->GetPosition().x, so->GetPosition().y, so->GetPosition().z);
-        glRotated(a,0,1,0);
-        glDrawElements(GL_TRIANGLES, so->GetIncidencia(), GL_UNSIGNED_INT, so->GetIndices());
-    glPopMatrix();
-
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-
-    printtext(700, 10, wid, hei, "DrawElements");
-}*/
-
-
 static void display(void)
 {
     char fpsx[3];
@@ -178,9 +129,12 @@ static void display(void)
     strcat(showing, fpsx);
     printtext(10, 10, wid, hei, showing);
 
-    //printtext(10, 580, wid, hei, "Press WASD to move. Press E to UP. Press C to DOWN");
-    //printtext(10, 560, wid, hei, "Press R to switch between DrawElements and GLBegin.");
-    //printtext(10, 540, wid, hei, "PRESS SPACE TO JUMP!!!");
+    char angularSpeedMouse[100] = "Angular Speed: ";
+    char asmValue[5];
+
+    sprintf(asmValue, "%.3f", camera->GetangularSpeed());
+    strcat(angularSpeedMouse, asmValue);
+    printtext(10, 580, wid, hei, angularSpeedMouse);
 
     glutSwapBuffers();
 }
@@ -192,29 +146,35 @@ static void key(unsigned char key, int x1, int y1)
     case 'q':
         exit(0);
         break;
-    case 'w':
-        camera->MoveUp();
-        break;
-    case 's':
-        camera->MoveDown();
-        break;
-    case 'd':
-        camera->TurnRight();
-        break;
     case 'a':
-        camera->TurnLeft();
+        if(Sc->GetSceneMode() == 2){
+            camera->ZoomIn(Sc->GetPivot());
+        }
+        else camera->MoveUp();
         break;
-    case 'r':
-        if(isGlBegin)
-        {
-            isGlBegin = false;
+    case 'z':
+        if(Sc->GetSceneMode() == 2){
+            camera->ZoomOut(Sc->GetPivot());
         }
-        else
-        {
-            isGlBegin = true;
-        }
+        else camera->MoveDown();
+        break;
+    case '1':
+        Sc->SetSceneMode(1);
+        break;
+    case '2':
+        Sc->SetSceneMode(2);
+        break;
+    case '3':
+        Sc->SetSceneMode(3);
+        break;
+    case '+':
+        camera->IncrementAngularSpeed();
+        break;
+    case '-':
+        camera->DecrementAngularSpeed();
         break;
     }
+
 
     glutPostRedisplay();
 }
@@ -238,6 +198,60 @@ void special(int key, int x, int y)
     }
 }
 
+void mouseButton(int button, int state, int x, int y)
+{
+    if (button == GLUT_LEFT_BUTTON)
+    {
+        if (state == GLUT_DOWN)
+        {
+            if(Sc->GetSceneMode() == 3)
+            {
+                camera->TurnLeft();
+                glm::vec3 mousePosition = glm::vec3(x, y, 0);
+                Sc->SetMousePosition(mousePosition);
+            }
+        }
+    }
+
+    if (button == GLUT_LEFT_BUTTON)
+    {
+        if (state == GLUT_UP)
+        {
+            //printf("O botão esquerdo do mouse foi solto");
+        }
+    }
+}
+
+void mouseMove(int x, int y)
+{
+    if(Sc->GetSceneMode() != 1)
+    {
+        int diferencaX, diferencaY;
+
+        diferencaX = x - Sc->GetMousePosition().x;
+        diferencaY = y - Sc->GetMousePosition().y;
+
+        if(Sc->GetSceneMode() == 2)
+        {
+            camera->UpdateDirection(Sc->GetPivot()->GetPosition());
+            //camera->Setdir(Sc->GetPivot()->GetPosition() - camera->Getpos());
+        }
+
+        camera->TurnMouseX(diferencaX);
+        camera->TurnMouseY(diferencaY);
+
+        if (Sc->GetSceneMode() == 2)
+        {
+            camera->UpdatePosition(Sc->GetPivot()->GetPosition());
+            //camera->Setpos(Sc->GetPivot()->GetPosition() - camera->Getdir());
+        }
+
+        glm::vec3 mouseP = glm::vec3(x, y, 0);
+        Sc->SetMousePosition(mouseP);
+        glutPostRedisplay();
+    }
+}
+
 static void idle(void)
 {
     glutPostRedisplay();
@@ -250,7 +264,13 @@ static FILE* openFile(char *fileName)
 
     fl = fopen(fileName, "r");
 
-    return fl;
+    if(fl == NULL)
+    {
+        printf("Error!");
+        exit(1);
+    }
+
+    fileList->push_back(fl);
 }
 
 /* Recupera Valores Vertices */
@@ -303,7 +323,7 @@ static void preencher_indices(FILE* fl, GLuint* indices, int incidencia)
     }
 }
 
-static SceneObject* prepara_variaveis(FILE *fl)
+static SceneObject* prepara_variaveis(FILE *fl, glm::vec3 posicao)
 {
     char line[255];
 
@@ -320,40 +340,45 @@ static SceneObject* prepara_variaveis(FILE *fl)
     preencher_vertices(fl, vertices, normais, qtdVertices);
     preencher_indices(fl, indices, incidencia);
 
-    for(int i = 0; i < 3; i++){
-        glm::vec3 posicao = glm::vec3(0, -1, 5 + (i*4));
-        glm::vec3 cor = glm::vec3(200 + (i*10), i, 0);
-        glm::vec3 corSelect = glm::vec3(1 + i, 0, 0);
+    //glm::vec3 posicao = glm::vec3(0, -1, 5);
+    glm::vec3 cor = Sc->GetNewSelectColor();
+    glm::vec3 corSelect = Sc->GetNewSelectColor();
 
-        SceneObject *so =
-            new SceneObject(posicao, cor, corSelect, vertices, normais, indices, incidencia, qtdVertices);
+    SceneObject *so =
+        new SceneObject(posicao, cor, corSelect, vertices, normais, indices, incidencia, qtdVertices);
 
-        listSceneObject->push_back(so);
-    }
+    listSceneObject->push_back(so);
 }
 
 static void StartCamera()
 {
-    camera->Setpos(glm::vec3(0, 0, 0));
+    camera->Setpos(glm::vec3(0, 1, 0));
     camera->Setdir(glm::vec3(0, 0, 1));
     camera->Setup(glm::vec3(0, 1, 0));
     camera->Setspeed(1);
-    camera->SetangularSpeed(0.1);
+    camera->SetangularSpeed(0.005);
 }
 
 /* Program entry point */
 int main(int argc, char *argv[])
 {
-    FILE *fl = openFile("../bunny.msh");
+    Sc->SetSceneMode(3); //Fly
 
-    if(fl == NULL)
-    {
-        printf("Error!");
-        exit(1);
-    }
+    openFile("../bunny.msh");
+    openFile("../chair_chesterfield.msh");
+    openFile("../chair_chesterfield.msh");
+    openFile("../bunny.msh");
 
     StartCamera();
-    prepara_variaveis(fl);
+
+    for(int i = 0; i < fileList->size(); i++)
+    {
+        glm::vec3 posicao = glm::vec3((i+1) * 3, 0, (i+1) * 4);
+        prepara_variaveis(fileList->at(i), posicao);
+        fclose(fileList->at(i));
+    }
+
+    Sc->SetPivot(listSceneObject->at(0));
 
     glutInit(&argc, argv);
     glutInitWindowSize(wid,hei);
@@ -366,6 +391,8 @@ int main(int argc, char *argv[])
     glutReshapeFunc(resize);
     glutKeyboardFunc(key);
     glutSpecialFunc(special);
+    glutMouseFunc(mouseButton);
+    glutMotionFunc(mouseMove);
     glutIdleFunc(idle);
 
     glClearColor(1,1,1,1);
