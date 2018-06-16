@@ -157,6 +157,7 @@ static void selectionMode()
         if(isEquals)
         {
             Sc->SetPivot(so);
+            camera->UpdateDirection(Sc->GetPivot()->GetPosition());
             break;
         }
     }
@@ -358,12 +359,12 @@ static FILE* openFile(char *fileName)
 
 /* Recupera Valores Vertices */
 static void preencher_vertices(FILE* fl, GLfloat* vertices, GLfloat* normais, int qtdVertices,
-                               glm::vec3 maiorCoordenada, glm::vec3 menorCoordenada)
+                               glm::vec3 &maiorCoordenada, glm::vec3 &menorCoordenada)
 {
     char line[255];
 
-    maiorCoordenada = glm::vec3(vertices[1], vertices[2], vertices[3]);
-    menorCoordenada = glm::vec3(vertices[1], vertices[2], vertices[3]);
+    maiorCoordenada = glm::vec3(vertices[0], vertices[1], vertices[2]);
+    menorCoordenada = glm::vec3(1000, 1000, 1000);
 
     for(int i = 0; i < qtdVertices; i++)
     {
@@ -378,15 +379,43 @@ static void preencher_vertices(FILE* fl, GLfloat* vertices, GLfloat* normais, in
             float val = atof(line);
 
             vertices[(i * 3) + j] = val;
+
+            switch(j)
+            {
+            case 0:
+                if(val > maiorCoordenada.x)
+                {
+                    maiorCoordenada.x = val;
+                }
+                if(val <= menorCoordenada.x)
+                {
+                    menorCoordenada.x = val;
+                }
+                break;
+            case 1:
+                if(val > maiorCoordenada.y)
+                {
+                    maiorCoordenada.y = val;
+                }
+                if(val <= menorCoordenada.y)
+                {
+                    menorCoordenada.y = val;
+                }
+                break;
+            case 2:
+                if(val > maiorCoordenada.z)
+                {
+                    maiorCoordenada.z = val;
+                }
+
+                if(val <= menorCoordenada.z)
+                {
+                    menorCoordenada.z = val;
+                }
+                break;
+
+            }
         }
-
-        if(vertices[(i * 3) + 0] > maiorCoordenada.x) maiorCoordenada.x = vertices[(i * 3) + 0];
-        if(vertices[(i * 3) + 0] > maiorCoordenada.y) maiorCoordenada.x = vertices[(i * 3) + 0];
-        if(vertices[(i * 3) + 0] > maiorCoordenada.z) maiorCoordenada.x = vertices[(i * 3) + 0];
-
-        if(vertices[(i * 3) + 0] < menorCoordenada.x) menorCoordenada.x = vertices[(i * 3) + 0];
-        if(vertices[(i * 3) + 0] < menorCoordenada.y) menorCoordenada.x = vertices[(i * 3) + 0];
-        if(vertices[(i * 3) + 0] < menorCoordenada.z) menorCoordenada.x = vertices[(i * 3) + 0];
 
         for(int j = 0; j < 3; j++)
         {
@@ -431,8 +460,8 @@ static SceneObject* prepara_variaveis(FILE *fl, glm::vec3 posicao)
     GLfloat* vertices = (GLfloat*) malloc( qtdVertices * 3 * sizeof(GLfloat) ); // allocate memory for array
     GLfloat* normais = (GLfloat*) malloc( qtdVertices * 3 * sizeof(GLfloat) ); // allocate memory for array
     GLuint* indices = (GLuint*) malloc( incidencia * 3 * sizeof(GLuint) ); // allocate memory for array
-    glm::vec3 maiorCoordenada;
-    glm::vec3 menorCoordenada;
+    glm::vec3 maiorCoordenada = glm::vec3(0, 0, 0);
+    glm::vec3 menorCoordenada = glm::vec3(0, 0, 0);;
 
     preencher_vertices(fl, vertices, normais, qtdVertices, maiorCoordenada, menorCoordenada);
     preencher_indices(fl, indices, incidencia);
