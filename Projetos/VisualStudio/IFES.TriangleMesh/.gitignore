@@ -1,1 +1,4 @@
 *.suo
+.vs
+/Debug
+/IFES.TriangleMesh/Debug
