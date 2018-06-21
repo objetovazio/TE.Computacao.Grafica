@@ -11,11 +11,13 @@
 #endif
 
 #include <stdlib.h>
-#include <stdio.h>
 
 #include "Camera.h"
 #include "SceneHelper.h"
 #include "SceneObject.h"
+
+#define _CRT_SECURE_NO_DEPRECATE
+#include <stdio.h>
 
 SceneHelper _sh;
 Camera _camera;
