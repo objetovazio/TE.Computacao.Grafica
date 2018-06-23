@@ -33,7 +33,7 @@ glm::vec3 SceneHelper::GetNewSelectColor()
 	float g = ColorPicker.g / 255.0;
 	float b = ColorPicker.b / 255.0;
 
-	glm::vec3 color = glm::vec3(r, g, b); // Testar ColorPicket / 250.0;
+	glm::vec3 color = glm::vec3(r, g, b); // Testar ColorPicket / 255.0;
 
 	return color;
 }

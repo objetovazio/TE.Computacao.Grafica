@@ -26,6 +26,18 @@ public:
 	glm::vec3 GetSelectColor() { return SelectColor; }
 	void SetSelectColor(glm::vec3 val) { SelectColor = val; }
 
+	glm::vec3 GetAmbiente() { return Ambiente; }
+	void SetAmbiente(glm::vec3 val) { Ambiente = val; }
+
+	glm::vec3 GetDifusa() { return Difusa; }
+	void SetDifusa(glm::vec3 val) { Difusa = val; }
+
+	glm::vec3 GetComponenteEspecular() { return ComponenteEspecular; }
+	void SetComponenteEspecular(glm::vec3 val) { ComponenteEspecular = val; }
+
+	float GetCoeficienteEspecular() { return CoeficienteEspecular; }
+	void SetCoeficienteEspecular(float val) { CoeficienteEspecular = val; }
+
 	GLfloat* GetVertices() { return Vertices; }
 	void SetVertices(GLfloat* val) { Vertices = val; }
 
@@ -35,14 +47,14 @@ public:
 	GLuint* GetIndices() { return Indices; }
 	void SetIndices(GLuint* val) { Indices = val; }
 
+	GLfloat* GetTextureCoordenate() { return TextureCoordenate; }
+	void SetTextureCoordenate(GLfloat* val) { TextureCoordenate = val; }
+
 	int GetIncidencia() { return Incidencia * 3; }
 	void SetIndices(int val) { Incidencia = val; }
 
 	int GetQuantidadeVertices() { return QuantidadeVertices; }
 	void SetQuantidadeVertices(int val) { QuantidadeVertices = val; }
-
-	char* GetArquivoTextura() { return ArquivoTextura; }
-	void SetArquivoTextura(char* val) { ArquivoTextura = val; }
 
 	void draw(bool isSelection);
 	void printObject();
@@ -54,11 +66,16 @@ private:
 	glm::vec3 Center;
 	glm::vec3 Color;
 	glm::vec3 SelectColor;
+	glm::vec3 Ambiente;
+	glm::vec3 Difusa;
+	glm::vec3 ComponenteEspecular;
+	float CoeficienteEspecular;
 	GLfloat* Vertices;
 	GLfloat* Normais;
 	GLuint* Indices;
+	GLfloat* TextureCoordenate;
 	int Incidencia;
 	int QuantidadeVertices;
-	char* ArquivoTextura;
+	int IdTextura;
 };
 

@@ -18,8 +18,10 @@ public:
 	virtual ~SceneObject();
 
 	std::vector<MeshItem> GetMeshGroup() { return MeshGroup; };
+	void SetMeshGroup(std::vector<MeshItem> meshGroup) { MeshGroup = meshGroup; }
+
 	void PushToMeshGroup(MeshItem val) { MeshGroup.push_back(val); }
-	void PopToMeshGroup() { MeshGroup.pop_back(); }
+	void PopFromMeshGroup() { MeshGroup.pop_back(); }
 	MeshItem GetMeshItem(int index) { return MeshGroup.at(index); }
 
 	int GetQuantidadeMeshItem() { return QuantidadeMeshItem; }

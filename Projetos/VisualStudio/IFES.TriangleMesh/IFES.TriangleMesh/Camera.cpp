@@ -72,7 +72,6 @@ void Camera::TurnMouseY(int diferenca)
 	Direction = rotUp * glm::vec4(Direction, 1.0);
 }
 
-
 void Camera::UpdatePosition(glm::vec3 pivotPosition)
 {
 	this->SetPosition(pivotPosition - Direction);
