@@ -8,6 +8,7 @@ public:
 	virtual ~SceneHelper();
 
 	glm::vec3 GetNewSelectColor();
+	glm::vec3 GetRandomPosition();
 
 	glm::vec3 GetMousePosition() { return MousePosition; }
 	void SetMousePosition(glm::vec3 val) { MousePosition = val; }

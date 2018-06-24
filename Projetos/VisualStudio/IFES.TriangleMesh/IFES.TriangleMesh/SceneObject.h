@@ -30,6 +30,8 @@ public:
 	char* GetPath() { return Path; }
 	void SetPath(char* val) { Path = val; }
 
+	void Draw(bool isSelection);
+
 private:
 	std::vector<MeshItem> MeshGroup;
 	int QuantidadeMeshItem;

@@ -9,7 +9,7 @@ MeshItem::~MeshItem()
 {
 }
 
-void MeshItem::draw(bool isSelection)
+void MeshItem::Draw(bool isSelection)
 {
 	glm::vec3 thisColor = isSelection ? this->GetSelectColor() : this->GetColor();
 
@@ -24,7 +24,7 @@ void MeshItem::draw(bool isSelection)
 	glColor3f(thisColor.r, thisColor.g, thisColor.b);
 	glTranslated(this->GetPosition().x, this->GetPosition().y, this->GetPosition().z);
 	//glRotated(a, 0, 1, 0);
-	glDrawElements(GL_TRIANGLES, this->GetIncidencia(), GL_UNSIGNED_INT, this->GetIndices());
+	glDrawElements(GL_TRIANGLES, GetQuantidadeIndices(), GL_UNSIGNED_INT, this->GetIndices());
 	glPopMatrix();
 
 	glDisableClientState(GL_VERTEX_ARRAY);
@@ -33,7 +33,7 @@ void MeshItem::draw(bool isSelection)
 
 void MeshItem::printObject()
 {
-	for (int i = 0; i < this->GetIncidencia(); i = i + 3) {
+	for (int i = 0; i < QuantidadeIndices; i = i + 3) {
 
 		int x, y, z;
 		x = this->GetIndices()[i];
@@ -53,7 +53,7 @@ void MeshItem::printObject()
 	printf("%d inc\n", incidencia);*/
 }
 
-bool MeshItem::compareColor(glm::vec3 cores)
+bool MeshItem::CompareColor(glm::vec3 cores)
 {
 	return cores == this->GetSelectColor();
 }

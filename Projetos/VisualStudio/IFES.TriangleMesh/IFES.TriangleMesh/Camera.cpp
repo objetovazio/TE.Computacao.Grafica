@@ -72,25 +72,25 @@ void Camera::TurnMouseY(int diferenca)
 	Direction = rotUp * glm::vec4(Direction, 1.0);
 }
 
-void Camera::UpdatePosition(glm::vec3 pivotPosition)
+void Camera::UpdatePositionByPivot()
 {
-	this->SetPosition(pivotPosition - Direction);
+	this->SetPosition(Pivot - Direction);
 }
 
-void Camera::UpdateDirection(glm::vec3 pivotPosition)
+void Camera::UpdateDirectionByPivot()
 {
-	this->SetDirection(pivotPosition - Direction);
+	this->SetDirection(Pivot - Direction);
 }
 
 void Camera::ZoomIn()
 {
 	Position = Position + 0.1f * Direction;
-	this->UpdateDirection(Pivot);
+	//this->UpdateDirectionByPivot();
 }
 
 void Camera::ZoomOut()
 {
 	Position = Position - 0.1f * Direction;
-	this->UpdateDirection(Pivot);
+	//this->UpdateDirectionByPivot();
 }
 

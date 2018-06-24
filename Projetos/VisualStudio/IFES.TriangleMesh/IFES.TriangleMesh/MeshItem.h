@@ -50,16 +50,19 @@ public:
 	GLfloat* GetTextureCoordenate() { return TextureCoordenate; }
 	void SetTextureCoordenate(GLfloat* val) { TextureCoordenate = val; }
 
-	int GetIncidencia() { return Incidencia * 3; }
-	void SetIndices(int val) { Incidencia = val; }
+	int GetQuantidadeIndices() { return QuantidadeIndices * 3; }
+	void SetQuantidadeIndices(int val) { QuantidadeIndices = val; }
 
 	int GetQuantidadeVertices() { return QuantidadeVertices; }
 	void SetQuantidadeVertices(int val) { QuantidadeVertices = val; }
 
-	void draw(bool isSelection);
+	GLint GetIdTextura() { return IdTextura; }
+	void SetIdTextura(GLint val) { IdTextura = val; }
+
+	void Draw(bool isSelection);
 	void printObject();
 
-	bool compareColor(glm::vec3 color);
+	bool CompareColor(glm::vec3 color);
 
 private:
 	glm::vec3 Position;
@@ -74,8 +77,8 @@ private:
 	GLfloat* Normais;
 	GLuint* Indices;
 	GLfloat* TextureCoordenate;
-	int Incidencia;
+	int QuantidadeIndices;
 	int QuantidadeVertices;
-	int IdTextura;
+	GLint IdTextura;
 };
 

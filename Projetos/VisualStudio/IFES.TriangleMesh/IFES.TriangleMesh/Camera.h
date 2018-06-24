@@ -33,6 +33,9 @@ public:
 	int GetSceneMode() { return SceneMode; }
 	void SetSceneMode(int val) { SceneMode = val; }
 
+	bool GetMadeSelection() { return madeSelection; }
+	void SetMadeSelection(bool val) { madeSelection = val; }
+
 	void MoveFoward();
 	void MoveBackward();
 	void MoveRight();
@@ -49,8 +52,13 @@ public:
 	void ZoomOut();
 	void ZoomIn();
 
-	void UpdatePosition(glm::vec3 pivot);
-	void UpdateDirection(glm::vec3 pivot);
+	void UpdateDirectionByPivot();
+	void UpdatePositionByPivot();
+
+	void IncrementAngularSpeed() { AngularSpeed += 0.001; }
+	void DecrementAngularSpeed() { if (AngularSpeed - 0.001 > 0) AngularSpeed -= 0.001; }
+
+	glm::vec3 GetCenter() { return Position + Direction; }
 
 private:
 	glm::vec3 Position;
@@ -60,5 +68,6 @@ private:
 	float AngularSpeed;
 	float Speed;
 	int SceneMode;
+	bool madeSelection;
 };
 
