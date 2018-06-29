@@ -18,9 +18,16 @@
 #include "Camera.h"
 #include "SceneHelper.h"
 #include "SceneObject.h"
+#include "Navigation.h"
+#include "NavigationFly.h"
+#include "NavigationOrbit.h"
 
 SceneHelper _sceneHelper;
 Camera _camera;
+Navigation* _navigation;
+NavigationFly* _navigationFly = new NavigationFly();
+NavigationOrbit* _navigationOrbit = new NavigationOrbit();
+
 std::vector<SceneObject> _sceneObjects;
 std::vector<FILE*> _files;
 
@@ -28,11 +35,6 @@ const GLfloat light_ambient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 const GLfloat light_diffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 const GLfloat light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 const GLfloat light_position[] = { 2.0f, 5.0f, 5.0f, 0.0f };
-
-const GLfloat mat_ambient[] = { 0.7f, 0.7f, 0.7f, 1.0f };
-const GLfloat mat_diffuse[] = { 0.8f, 0.8f, 0.8f, 1.0f };
-const GLfloat mat_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-const GLfloat high_shininess[] = { 50.0f };
 
 int wid = 800;
 int hei = 600;
@@ -115,14 +117,14 @@ static void selectionMode()
 		_camera.GetCenter().x, _camera.GetCenter().y, _camera.GetCenter().z,
 		_camera.GetUp().x, _camera.GetUp().y, _camera.GetUp().z);
 
-	for(int i = 0; i < _sceneObjects.size(); i++)
+	for (int i = 0; i < _sceneObjects.size(); i++)
 	{
 		_sceneObjects.at(i).Draw(_camera.GetMadeSelection());
 	}
 
 	glGetIntegerv(GL_VIEWPORT, viewportCores);
 
-	glReadPixels(_sceneHelper.GetMousePosition().x, viewportCores[3] - _sceneHelper.GetMousePosition().y, 1, 1, GL_RGBA, GL_FLOAT, &resposta);
+	glReadPixels(_navigation->GetMousePosition().x, viewportCores[3] - _navigation->GetMousePosition().y, 1, 1, GL_RGBA, GL_FLOAT, &resposta);
 
 	glm::vec3 cores = glm::vec3(resposta[0], resposta[1], resposta[2]);
 
@@ -133,11 +135,12 @@ static void selectionMode()
 			MeshItem mi = so.GetMeshItem(j);
 
 			if (mi.CompareColor(cores)) {
-				_camera.SetPivot(mi.GetPosition());
+				_camera.SetPivot(mi.GetCenter());
 				_camera.UpdateDirectionByPivot();
+				_camera.SetSelectionMode(false);
 				break;
 			}
-			
+
 		}
 	}
 
@@ -147,7 +150,7 @@ static void selectionMode()
 static void display(void)
 {
 	char fpsLabel[30];
-	char showing[30	] = "FPS: ";
+	char showing[30] = "FPS: ";
 
 	const double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
 	const double a = t * 90.0;
@@ -158,14 +161,13 @@ static void display(void)
 	T = t2 - t1;
 	double fps = 1 / T;
 
-	if (_camera.GetSceneMode() == 1 && _camera.GetMadeSelection())
+	if (_camera.GetSelectionMode() && _camera.GetMadeSelection())
 	{
 		selectionMode();
 		_camera.SetMadeSelection(false);
 	}
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glColor3d(1, 0, 0);
 
 	glLoadIdentity();
 	gluLookAt(_camera.GetPosition().x, _camera.GetPosition().y, _camera.GetPosition().z,
@@ -174,7 +176,7 @@ static void display(void)
 
 	for (int i = 0; i < _sceneObjects.size(); i++)
 	{
-		_sceneObjects.at(i).Draw(_camera.GetMadeSelection());
+		_sceneObjects.at(i).Draw(false);
 	}
 
 	sprintf(fpsLabel, "%.1f", fps);
@@ -205,6 +207,11 @@ static void StartCamera()
 	_camera.SetAngularSpeed(0.005);
 	_camera.SetPivot(_sceneObjects.at(0).GetMeshItem(0).GetCenter());
 	_camera.SetMadeSelection(false);
+
+	_navigationFly->SetCamera(&_camera);
+	_navigationOrbit->SetCamera(&_camera);
+
+	_navigation = _navigationFly;
 }
 
 FILE* AddFile(const char* path, const char* model) {
@@ -280,13 +287,13 @@ void LoadVerticeNormalTextura(FILE* file, int quantidadeVertices, MeshItem &mesh
 		normais[(i * 3)] = values[0]; normais[(i * 3) + 1] = values[1]; normais[(i * 3) + 2] = values[2];
 
 		fscanf(file, "%f %f", &values[0], &values[1]);
-		textCord[(i * 3)] = values[0]; textCord[(i * 3) + 1] = values[1];
+		textCord[(i * 2)] = values[0]; textCord[(i * 2) + 1] = values[1];
 	}
 
 	meshItem.SetVertices(vertices);
 	meshItem.SetNormais(normais);
 	meshItem.SetTextureCoordenate(textCord);
-	meshItem.SetCenter(maiorCoordenada - menorCoordenada);
+	meshItem.SetCenter((maiorCoordenada + menorCoordenada) * 0.5f);
 }
 
 void LoadIndices(FILE* file, int quantidadeIndices, MeshItem &meshItem) {
@@ -322,7 +329,7 @@ MeshItem LoadMeshItem(FILE* file, const char* path) {
 	fscanf(file, "%f", &coeficienteEspecular);
 
 	fscanf(file, "%s", line); //Pegou nome do arquivo de textura
-	//meshItem.SetIdTextura(LoadTexture(path, line));
+	meshItem.SetIdTextura(LoadTexture(path, line));
 
 	//Carrega a quantidade de vertices e indices
 	fscanf(file, "%d %d", &quantidadeVertices, &quantidadeIndices);
@@ -373,123 +380,48 @@ std::vector<SceneObject> LoadSceneObjects(std::vector<FILE*> files, std::vector<
 #pragma endregion
 
 #pragma region Funções de eventos
-static void key(unsigned char key, int x1, int y1)
+static void key(unsigned char key, int x, int y)
 {
 	switch (key)
 	{
 	case 'q':
 		exit(0);
 		break;
-	case 'a':
-		if (_camera.GetSceneMode() == 2)
-		{
-			_camera.ZoomIn();
-		}
-		else _camera.MoveUp();
-		break;
-	case 'z':
-		if (_camera.GetSceneMode() == 2)
-		{
-			_camera.ZoomOut();
-		}
-		else _camera.MoveDown();
-		break;
 	case '1':
-		_camera.SetSceneMode(1);
+		_navigation = _navigationOrbit;
+		_navigation->KeyPress(key, x, y);
 		break;
 	case '2':
-		_camera.SetSceneMode(2);
+		_navigation = _navigationOrbit;
+		_navigation->KeyPress(key, x, y);
 		break;
 	case '3':
-		_camera.SetSceneMode(3);
+		_navigation = _navigationFly;
 		break;
-	case '+':
-		_camera.IncrementAngularSpeed();
+	case 'c':
+		_camera.UpdateDirectionByPivot();
 		break;
-	case '-':
-		_camera.DecrementAngularSpeed();
+	case 'v':
+		_camera.UpdatePositionByPivot();
 		break;
+	default:
+		_navigation->KeyPress(key, x, y);
 	}
-
-
-	glutPostRedisplay();
 }
 
 void special(int key, int x, int y)
 {
-	switch (key)
-	{
-	case GLUT_KEY_UP:
-		_camera.MoveFoward();
-		break;
-	case GLUT_KEY_DOWN:
-		_camera.MoveBackward();
-		break;
-	case GLUT_KEY_LEFT:
-		_camera.MoveLeft();
-		break;
-	case GLUT_KEY_RIGHT:
-		_camera.MoveRight();
-		break;
-	}
+	_navigation->SpecialKeyPress(key, x, y);
 }
 
 void mouseButton(int button, int state, int x, int y)
 {
-	if (button == GLUT_LEFT_BUTTON)
-	{
-		if (state == GLUT_DOWN)
-		{
-			if (_camera.GetSceneMode() == 3)
-			{
-				glm::vec3 mousePosition = glm::vec3(x, y, 0);
-				_sceneHelper.SetMousePosition(mousePosition);
-			}
-
-			if (_camera.GetSceneMode() == 1)
-			{
-				glm::vec3 mousePosition = glm::vec3(x, y, 0);
-				_sceneHelper.SetMousePosition(mousePosition);
-				_camera.SetMadeSelection(true);
-			}
-		}
-	}
-
-	if (button == GLUT_LEFT_BUTTON)
-	{
-		if (state == GLUT_UP)
-		{
-			//printf("O botão esquerdo do mouse foi solto");
-		}
-	}
+	_navigation->MouseButton(button, state, x, y);
 }
 
 void mouseMove(int x, int y)
 {
-	if (_camera.GetSceneMode() != 1)
-	{
-		int diferencaX, diferencaY;
-
-		diferencaX = x - _sceneHelper.GetMousePosition().x;
-		diferencaY = y - _sceneHelper.GetMousePosition().y;
-
-		if (_camera.GetSceneMode() == 2)
-		{
-			_camera.UpdateDirectionByPivot();
-		}
-
-		_camera.TurnMouseX(diferencaX);
-		_camera.TurnMouseY(diferencaY);
-
-		if (_camera.GetSceneMode() == 2)
-		{
-			_camera.UpdatePositionByPivot();
-		}
-
-		glm::vec3 mouseP = glm::vec3(x, y, 0);
-		_sceneHelper.SetMousePosition(mouseP);
-		glutPostRedisplay();
-	}
+	_navigation->MouseMove(x, y);
 }
 
 static void idle(void)
@@ -503,21 +435,17 @@ int main(int argc, char *argv[])
 	std::vector<const char*> path;
 	std::vector<const char*> model;
 
-	path.push_back("Models/Bladesong.Missile.Boat/");
+	//path.push_back("Models/starwars/");
 	path.push_back("Models/House/");
-	path.push_back("Models/starwars/");
+	path.push_back("Models/Bladesong.Missile.Boat/");
 
-	model.push_back("Bladesong Missile Boat.msh");
+	//model.push_back("starwars.msh");
 	model.push_back("houseA_obj.msh");
-	model.push_back("starwars.msh");
+	model.push_back("Bladesong Missile Boat.msh");
 
 	for (int i = 0; i < path.size(); i++) {
 		_files.push_back(AddFile(path.at(i), model.at(i)));
 	}
-
-	_sceneObjects = LoadSceneObjects(_files, path);
-
-	StartCamera();
 
 	glutInit(&argc, argv);
 	glutInitWindowSize(wid, hei);
@@ -548,10 +476,8 @@ int main(int argc, char *argv[])
 	glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
 	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
-	glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-	glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
+	_sceneObjects = LoadSceneObjects(_files, path);
+	StartCamera();
 
 	glutMainLoop();
 

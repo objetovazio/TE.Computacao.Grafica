@@ -30,27 +30,11 @@ public:
 	float GetSpeed() { return Speed; }
 	void SetSpeed(float val) { Speed = val; }
 
-	int GetSceneMode() { return SceneMode; }
-	void SetSceneMode(int val) { SceneMode = val; }
+	bool GetMadeSelection() { return MadeSelection; }
+	void SetMadeSelection(bool val) { MadeSelection = val; }
 
-	bool GetMadeSelection() { return madeSelection; }
-	void SetMadeSelection(bool val) { madeSelection = val; }
-
-	void MoveFoward();
-	void MoveBackward();
-	void MoveRight();
-	void MoveLeft();
-	void MoveUp();
-	void MoveDown();
-
-	void TurnLeft();
-	void TurnRight();
-
-	void TurnMouseX(int diferenca);
-	void TurnMouseY(int diferenca);
-
-	void ZoomOut();
-	void ZoomIn();
+	bool GetSelectionMode() { return SelectionMode; }
+	void SetSelectionMode(bool val) { SelectionMode = val; }
 
 	void UpdateDirectionByPivot();
 	void UpdatePositionByPivot();
@@ -67,7 +51,7 @@ private:
 	glm::vec3 Pivot;
 	float AngularSpeed;
 	float Speed;
-	int SceneMode;
-	bool madeSelection;
+	bool SelectionMode;
+	bool MadeSelection;
 };
 

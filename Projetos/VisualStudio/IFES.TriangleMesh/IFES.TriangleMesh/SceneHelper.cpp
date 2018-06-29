@@ -4,6 +4,7 @@
 
 SceneHelper::SceneHelper()
 {
+	ColorPicker.r = 0.0;
 }
 
 
@@ -15,18 +16,18 @@ SceneHelper::~SceneHelper()
 glm::vec3 SceneHelper::GetNewSelectColor()
 {
 	if (ColorPicker.r <= 1) {
-		ColorPicker.r += 0.2;
+		ColorPicker.r += 0.0025;
 	}
 	else if (ColorPicker.g <= 1)
 	{
 		ColorPicker.r = 0;
-		ColorPicker.g += 0.2;
+		ColorPicker.g += 0.0025;
 	}
 	else
 	{
 		ColorPicker.r = 0;
 		ColorPicker.g = 0;
-		ColorPicker.b += 0.2;
+		ColorPicker.b += 0.0025;
 	}
 
 	float r = ColorPicker.r;
