@@ -17,20 +17,23 @@ void MeshItem::Draw(bool isSelection)
 	float coeficienteEspecular[] = { CoeficienteEspecular };
 	float thisColor[3];
 
+	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_VERTEX_ARRAY);
+
 	if (!isSelection) {
 		glMaterialfv(GL_FRONT, GL_AMBIENT, ambiente);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, difusa);
 		glMaterialfv(GL_FRONT, GL_SPECULAR, especular);
 		glMaterialfv(GL_FRONT, GL_SHININESS, coeficienteEspecular);
 		
-		thisColor[0] = GetColor().r;
-		thisColor[1] = GetColor().g;
-		thisColor[2] = GetColor().b;
-
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, GetIdTextura());
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glTexCoordPointer(2, GL_FLOAT, 0, GetTextureCoordenate());
+
+		thisColor[0] = GetColor().r;
+		thisColor[1] = GetColor().g;
+		thisColor[2] = GetColor().b;
 	}
 	else {
 		thisColor[0] = GetSelectColor().r;
@@ -38,9 +41,7 @@ void MeshItem::Draw(bool isSelection)
 		thisColor[2] = GetSelectColor().b;
 	}
 
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glEnableClientState(GL_VERTEX_ARRAY);
-
+	
 	glNormalPointer(GL_FLOAT, 0, this->GetNormais());
 
 	glVertexPointer(3, GL_FLOAT, 0, this->GetVertices());
@@ -50,16 +51,22 @@ void MeshItem::Draw(bool isSelection)
 	if (isSelection) {
 		glColor3f(thisColor[0], thisColor[1], thisColor[2]);
 	}
+
 	glTranslated(this->GetPosition().x, this->GetPosition().y, this->GetPosition().z);
 
 	glDrawElements(GL_TRIANGLES, GetQuantidadeIndices(), GL_UNSIGNED_INT, this->GetIndices());
+
 	glPopMatrix();
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glDisable(GL_TEXTURE_2D);
+
+	if (!isSelection) {
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glColor4f(1, 1, 1, 1);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glDisable(GL_TEXTURE_2D);
+	}
 }
 
 void MeshItem::printObject()

@@ -22,12 +22,14 @@ void NavigationOrbit::TurnMouseY(int diferenca)
 
 void NavigationOrbit::ZoomIn()
 {
-	GetCamera()->SetPosition(GetCamera()->GetPosition() + 0.1f * GetCamera()->GetDirection());
+	GetCamera()->SetPosition(GetCamera()->GetPosition() + 0.07f * GetCamera()->GetDirection());
+	GetCamera()->UpdateDirectionByPivot();
 }
 
 void NavigationOrbit::ZoomOut()
 {
-	GetCamera()->SetPosition(GetCamera()->GetPosition() - 0.1f * GetCamera()->GetDirection());
+	GetCamera()->SetPosition(GetCamera()->GetPosition() - 0.07f * GetCamera()->GetDirection());
+	GetCamera()->UpdateDirectionByPivot();
 }
 
 void NavigationOrbit::KeyPress(unsigned char key, int x, int y) {

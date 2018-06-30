@@ -136,8 +136,8 @@ static void selectionMode()
 
 			if (mi.CompareColor(cores)) {
 				_camera.SetPivot(mi.GetCenter());
-				_camera.UpdateDirectionByPivot();
 				_camera.SetSelectionMode(false);
+				_camera.UpdateDirectionByPivot();
 				break;
 			}
 
@@ -151,9 +151,7 @@ static void display(void)
 {
 	char fpsLabel[30];
 	char showing[30] = "FPS: ";
-
 	const double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
-	const double a = t * 90.0;
 	char line[255];
 
 	t1 = t2;
@@ -176,7 +174,7 @@ static void display(void)
 
 	for (int i = 0; i < _sceneObjects.size(); i++)
 	{
-		_sceneObjects.at(i).Draw(false);
+		_sceneObjects.at(i).Draw(_camera.GetMadeSelection());
 	}
 
 	sprintf(fpsLabel, "%.1f", fps);
@@ -293,7 +291,7 @@ void LoadVerticeNormalTextura(FILE* file, int quantidadeVertices, MeshItem &mesh
 	meshItem.SetVertices(vertices);
 	meshItem.SetNormais(normais);
 	meshItem.SetTextureCoordenate(textCord);
-	meshItem.SetCenter((maiorCoordenada + menorCoordenada) * 0.5f);
+	meshItem.SetCenter(((maiorCoordenada + menorCoordenada) * 0.5f));
 }
 
 void LoadIndices(FILE* file, int quantidadeIndices, MeshItem &meshItem) {
@@ -341,9 +339,8 @@ MeshItem LoadMeshItem(FILE* file, const char* path) {
 	meshItem.SetDifusa(difusa);
 	meshItem.SetComponenteEspecular(componenteEspecular);
 	meshItem.SetCoeficienteEspecular(coeficienteEspecular);
+	meshItem.SetColor(_sceneHelper.GetNewColor());
 	meshItem.SetSelectColor(_sceneHelper.GetNewSelectColor());
-	// Precisa setar cor???
-	meshItem.SetColor(_sceneHelper.GetNewSelectColor());
 	meshItem.SetQuantidadeVertices(quantidadeVertices);
 	meshItem.SetQuantidadeIndices(quantidadeIndices);
 
@@ -435,14 +432,14 @@ int main(int argc, char *argv[])
 	std::vector<const char*> path;
 	std::vector<const char*> model;
 
-	//path.push_back("Models/starwars/");
-	path.push_back("Models/House/");
-	path.push_back("Models/Bladesong.Missile.Boat/");
-
-	//model.push_back("starwars.msh");
-	model.push_back("houseA_obj.msh");
-	model.push_back("Bladesong Missile Boat.msh");
-
+	path.push_back("Models/starwars/");
+	//path.push_back("Models/House/");
+	//path.push_back("Models/Bladesong.Missile.Boat/");
+	
+	model.push_back("starwars.msh");
+	//model.push_back("houseA_obj.msh");
+	//model.push_back("Bladesong Missile Boat.msh");
+	
 	for (int i = 0; i < path.size(); i++) {
 		_files.push_back(AddFile(path.at(i), model.at(i)));
 	}

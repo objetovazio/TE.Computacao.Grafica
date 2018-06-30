@@ -12,33 +12,72 @@ SceneHelper::~SceneHelper()
 {
 }
 
-
-glm::vec3 SceneHelper::GetNewSelectColor()
+glm::vec3 SceneHelper::GetNewColor()
 {
-	if (ColorPicker.r <= 1) {
-		ColorPicker.r += 0.0025;
+	float value = 6.0f;
+	float divider = 255.0f;
+
+
+	if (ColorPicker.r <= divider) {
+		ColorPicker.r += value;
 	}
-	else if (ColorPicker.g <= 1)
+	else if (ColorPicker.g <= divider)
 	{
 		ColorPicker.r = 0;
-		ColorPicker.g += 0.0025;
+		ColorPicker.g += value;
 	}
-	else
+	else if (ColorPicker.b <= divider)
 	{
 		ColorPicker.r = 0;
 		ColorPicker.g = 0;
-		ColorPicker.b += 0.0025;
+		ColorPicker.b += value;
+	}
+	else {
+		exit(0);
 	}
 
 	float r = ColorPicker.r;
 	float g = ColorPicker.g;
 	float b = ColorPicker.b;
 
-	glm::vec3 color = glm::vec3(r, g, b); // Testar ColorPicket / 255.0;
+	glm::vec3 color = glm::vec3(r, g, b) / divider;
+
+	return color;
+}
+
+glm::vec3 SceneHelper::GetNewSelectColor()
+{
+	float value = 6.0f;
+	float divider = 255.0f;
+
+	if (ColorPickerSelection.r <= divider) {
+		ColorPickerSelection.r += value;
+	}
+	else if (ColorPickerSelection.g <= 1)
+	{
+		ColorPickerSelection.r = 0;
+		ColorPickerSelection.g += value;
+	}
+	else if(ColorPickerSelection.b <= divider)
+	{
+		ColorPickerSelection.r = 0;
+		ColorPickerSelection.g = 0;
+		ColorPickerSelection.b += value;
+	}
+	else {
+		exit(0);
+	}
+
+	float r = ColorPickerSelection.r;
+	float g = ColorPickerSelection.g;
+	float b = ColorPickerSelection.b;
+
+	glm::vec3 color = glm::vec3(r, g, b) / divider;
 
 	return color;
 }
 
 glm::vec3 SceneHelper::GetRandomPosition() {
-	return glm::vec3(rand() % 300 + (-100), 0, rand() % 300 + 1);
+	srand(time(NULL));
+	return glm::vec3(rand() % 300 + (-100), 0, rand() % 500 + 1);
 }

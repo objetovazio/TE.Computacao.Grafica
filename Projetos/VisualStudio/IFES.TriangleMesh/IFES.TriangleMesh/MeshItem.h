@@ -20,7 +20,7 @@ public:
 	glm::vec3 GetColor() { return Color; }
 	void SetColor(glm::vec3 val) { Color = val; }
 
-	glm::vec3 GetCenter() { return Center; }
+	glm::vec3 GetCenter() { return Center + Position; }
 	void SetCenter(glm::vec3 val) { Center = val; }
 
 	glm::vec3 GetSelectColor() { return SelectColor; }
