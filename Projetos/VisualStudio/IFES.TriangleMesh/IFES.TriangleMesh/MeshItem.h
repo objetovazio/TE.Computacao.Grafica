@@ -32,6 +32,12 @@ public:
 	glm::vec3 GetDifusa() { return Difusa; }
 	void SetDifusa(glm::vec3 val) { Difusa = val; }
 
+	glm::vec3 GetMinCoord() { return MinCoord; }
+	void SetMinCoord(glm::vec3 val) { MinCoord = val; }
+
+	glm::vec3 GetMaxCoord() { return MaxCoord; }
+	void SetMaxCoord(glm::vec3 val) { MaxCoord = val; }
+
 	glm::vec3 GetComponenteEspecular() { return ComponenteEspecular; }
 	void SetComponenteEspecular(glm::vec3 val) { ComponenteEspecular = val; }
 
@@ -59,10 +65,13 @@ public:
 	GLint GetIdTextura() { return IdTextura; }
 	void SetIdTextura(GLint val) { IdTextura = val; }
 
-	void Draw(bool isSelection);
+	void Draw(bool isSelection, bool drawBoundingBox);
+
 	void printObject();
 
 	bool CompareColor(glm::vec3 color);
+
+	void DrawBoundingBox();
 
 private:
 	glm::vec3 Position;
@@ -72,6 +81,8 @@ private:
 	glm::vec3 Ambiente;
 	glm::vec3 Difusa;
 	glm::vec3 ComponenteEspecular;
+	glm::vec3 MinCoord;
+	glm::vec3 MaxCoord;
 	float CoeficienteEspecular;
 	GLfloat* Vertices;
 	GLfloat* Normais;

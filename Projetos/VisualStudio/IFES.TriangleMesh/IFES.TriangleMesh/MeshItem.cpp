@@ -9,7 +9,7 @@ MeshItem::~MeshItem()
 {
 }
 
-void MeshItem::Draw(bool isSelection)
+void MeshItem::Draw(bool isSelection, bool drawBoundingBox)
 {
 	float ambiente[] = { Ambiente.x, Ambiente.y, Ambiente.z, 1.0 };
 	float difusa[] = { Difusa.x, Difusa.y, Difusa.z, 1.0 };
@@ -25,7 +25,7 @@ void MeshItem::Draw(bool isSelection)
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, difusa);
 		glMaterialfv(GL_FRONT, GL_SPECULAR, especular);
 		glMaterialfv(GL_FRONT, GL_SHININESS, coeficienteEspecular);
-		
+
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, GetIdTextura());
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -41,7 +41,6 @@ void MeshItem::Draw(bool isSelection)
 		thisColor[2] = GetSelectColor().b;
 	}
 
-	
 	glNormalPointer(GL_FLOAT, 0, this->GetNormais());
 
 	glVertexPointer(3, GL_FLOAT, 0, this->GetVertices());
@@ -58,6 +57,8 @@ void MeshItem::Draw(bool isSelection)
 
 	glPopMatrix();
 
+	if (drawBoundingBox) DrawBoundingBox();
+
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
 
@@ -67,6 +68,51 @@ void MeshItem::Draw(bool isSelection)
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glDisable(GL_TEXTURE_2D);
 	}
+}
+
+void MeshItem::DrawBoundingBox() {
+	glPushMatrix();
+	glBegin(GL_LINES);
+	glColor3f(2.0f, 2.0f, 0.0f);
+
+	glVertex3f(MinCoord.x + Position.x, MinCoord.y + Position.y, MinCoord.z + Position.z);
+	glVertex3f(MinCoord.x + Position.x, MaxCoord.y + Position.y, MinCoord.z + Position.z);
+
+	glVertex3f(MinCoord.x + Position.x, MinCoord.y + Position.y, MaxCoord.z + Position.z);
+	glVertex3f(MinCoord.x + Position.x, MaxCoord.y + Position.y, MaxCoord.z + Position.z);
+
+	glVertex3f(MinCoord.x + Position.x, MinCoord.y + Position.y, MinCoord.z + Position.z);
+	glVertex3f(MinCoord.x + Position.x, MinCoord.y + Position.y, MaxCoord.z + Position.z);
+
+	glVertex3f(MinCoord.x + Position.x, MaxCoord.y + Position.y, MinCoord.z + Position.z);
+	glVertex3f(MinCoord.x + Position.x, MaxCoord.y + Position.y, MaxCoord.z + Position.z);
+
+	glVertex3f(MaxCoord.x + Position.x, MinCoord.y + Position.y, MinCoord.z + Position.z);
+	glVertex3f(MaxCoord.x + Position.x, MaxCoord.y + Position.y, MinCoord.z + Position.z);
+
+	glVertex3f(MaxCoord.x + Position.x, MinCoord.y + Position.y, MaxCoord.z + Position.z);
+	glVertex3f(MaxCoord.x + Position.x, MaxCoord.y + Position.y, MaxCoord.z + Position.z);
+
+	glVertex3f(MaxCoord.x + Position.x, MinCoord.y + Position.y, MinCoord.z + Position.z);
+	glVertex3f(MaxCoord.x + Position.x, MinCoord.y + Position.y, MaxCoord.z + Position.z);
+
+	glVertex3f(MaxCoord.x + Position.x, MaxCoord.y + Position.y, MinCoord.z + Position.z);
+	glVertex3f(MaxCoord.x + Position.x, MaxCoord.y + Position.y, MaxCoord.z + Position.z);
+
+	glVertex3f(MinCoord.x + Position.x, MinCoord.y + Position.y, MinCoord.z + Position.z);
+	glVertex3f(MaxCoord.x + Position.x, MinCoord.y + Position.y, MinCoord.z + Position.z);
+
+	glVertex3f(MinCoord.x + Position.x, MaxCoord.y + Position.y, MinCoord.z + Position.z);
+	glVertex3f(MaxCoord.x + Position.x, MaxCoord.y + Position.y, MinCoord.z + Position.z);
+
+	glVertex3f(MinCoord.x + Position.x, MinCoord.y + Position.y, MaxCoord.z + Position.z);
+	glVertex3f(MaxCoord.x + Position.x, MinCoord.y + Position.y, MaxCoord.z + Position.z);
+
+	glVertex3f(MinCoord.x + Position.x, MaxCoord.y + Position.y, MaxCoord.z + Position.z);
+	glVertex3f(MaxCoord.x + Position.x, MaxCoord.y + Position.y, MaxCoord.z + Position.z);
+
+	glEnd();
+	glPopMatrix();
 }
 
 void MeshItem::printObject()
@@ -85,10 +131,6 @@ void MeshItem::printObject()
 			this->GetNormais()[y],
 			this->GetNormais()[z]);
 	}
-
-	//printf("X: %.2f Y: %.2f Z: %.2f", this->GetPosition().x, this->GetPosition().y, this->GetPosition().z);
-	/*printf("vertice: %.5f %.5f %.5f normais: %.5f %.5f %.5f\n", vertices[i], vertices[i + 1], vertices[i + 2], normais[i], normais[i + 1], normais[i + 2]);
-	printf("%d inc\n", incidencia);*/
 }
 
 bool MeshItem::CompareColor(glm::vec3 cores)

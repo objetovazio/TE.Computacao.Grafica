@@ -24,17 +24,19 @@ public:
 	void PopFromMeshGroup() { MeshGroup.pop_back(); }
 	MeshItem GetMeshItem(int index) { return MeshGroup.at(index); }
 
+	bool CompareMeshItem(MeshItem mi);
+
 	int GetQuantidadeMeshItem() { return QuantidadeMeshItem; }
 	void SetQuantidadeMeshItem(int val) { QuantidadeMeshItem = val; }
 
 	char* GetPath() { return Path; }
 	void SetPath(char* val) { Path = val; }
 
-	void Draw(bool isSelection);
+	void Draw(bool isSelection, glm::vec3 CenterBoundingBox, bool drawBox);
 
 private:
 	std::vector<MeshItem> MeshGroup;
 	int QuantidadeMeshItem;
 	char* Path;
+	int* IdBoundingBox;
 };
-

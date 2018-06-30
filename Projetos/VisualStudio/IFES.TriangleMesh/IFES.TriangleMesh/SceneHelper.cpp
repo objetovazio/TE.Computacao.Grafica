@@ -4,6 +4,7 @@
 
 SceneHelper::SceneHelper()
 {
+	srand(time(NULL));
 	ColorPicker.r = 0.0;
 }
 
@@ -78,6 +79,5 @@ glm::vec3 SceneHelper::GetNewSelectColor()
 }
 
 glm::vec3 SceneHelper::GetRandomPosition() {
-	srand(time(NULL));
-	return glm::vec3(rand() % 300 + (-100), 0, rand() % 500 + 1);
+	return glm::vec3(rand() % 1000 + (-1000), 0, rand() % 1000 + (-100));
 }

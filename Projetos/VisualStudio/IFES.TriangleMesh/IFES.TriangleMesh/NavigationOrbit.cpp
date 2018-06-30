@@ -2,7 +2,6 @@
 
 NavigationOrbit::NavigationOrbit() {}
 
-
 NavigationOrbit::~NavigationOrbit(){}
 
 void NavigationOrbit::TurnMouseX(int diferenca)

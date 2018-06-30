@@ -52,7 +52,7 @@ static void resize(int width, int height)
 	glLoadIdentity();
 	//glFrustum(-ar, ar, -1.0, 1.0, 1.0, 100.0);
 
-	gluPerspective(60, ar, 0.1, 1000);
+	gluPerspective(60, ar, 0.1, 1000000);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -119,7 +119,7 @@ static void selectionMode()
 
 	for (int i = 0; i < _sceneObjects.size(); i++)
 	{
-		_sceneObjects.at(i).Draw(_camera.GetMadeSelection());
+		_sceneObjects.at(i).Draw(_camera.GetMadeSelection(), _camera.GetPivot(), false);
 	}
 
 	glGetIntegerv(GL_VIEWPORT, viewportCores);
@@ -129,16 +129,17 @@ static void selectionMode()
 	glm::vec3 cores = glm::vec3(resposta[0], resposta[1], resposta[2]);
 
 	for (int i = 0; i < _sceneObjects.size(); i++) {
-		SceneObject so = _sceneObjects.at(i);
+		SceneObject* so = &_sceneObjects.at(i);
 
-		for (int j = 0; j < so.GetQuantidadeMeshItem(); j++) {
-			MeshItem mi = so.GetMeshItem(j);
+		for (int j = 0; j < so->GetQuantidadeMeshItem(); j++) {
+			MeshItem mi = so->GetMeshItem(j);
 
 			if (mi.CompareColor(cores)) {
 				_camera.SetPivot(mi.GetCenter());
 				_camera.SetSelectionMode(false);
 				_camera.UpdateDirectionByPivot();
-				break;
+				TurnLight(true);
+				return;
 			}
 
 		}
@@ -174,7 +175,7 @@ static void display(void)
 
 	for (int i = 0; i < _sceneObjects.size(); i++)
 	{
-		_sceneObjects.at(i).Draw(_camera.GetMadeSelection());
+		_sceneObjects.at(i).Draw(_camera.GetMadeSelection(), _camera.GetPivot(), _navigation == _navigationOrbit);
 	}
 
 	sprintf(fpsLabel, "%.1f", fps);
@@ -203,7 +204,8 @@ static void StartCamera()
 	_camera.SetUp(glm::vec3(0, 1, 0));
 	_camera.SetSpeed(1);
 	_camera.SetAngularSpeed(0.005);
-	_camera.SetPivot(_sceneObjects.at(0).GetMeshItem(0).GetCenter());
+	MeshItem mi = _sceneObjects.at(0).GetMeshItem(0);
+	_camera.SetPivot(mi.GetCenter());
 	_camera.SetMadeSelection(false);
 
 	_navigationFly->SetCamera(&_camera);
@@ -291,6 +293,8 @@ void LoadVerticeNormalTextura(FILE* file, int quantidadeVertices, MeshItem &mesh
 	meshItem.SetVertices(vertices);
 	meshItem.SetNormais(normais);
 	meshItem.SetTextureCoordenate(textCord);
+	meshItem.SetMinCoord(menorCoordenada);
+	meshItem.SetMaxCoord(maiorCoordenada);
 	meshItem.SetCenter(((maiorCoordenada + menorCoordenada) * 0.5f));
 }
 
@@ -432,14 +436,26 @@ int main(int argc, char *argv[])
 	std::vector<const char*> path;
 	std::vector<const char*> model;
 
-	path.push_back("Models/starwars/");
-	//path.push_back("Models/House/");
-	//path.push_back("Models/Bladesong.Missile.Boat/");
-	
-	model.push_back("starwars.msh");
-	//model.push_back("houseA_obj.msh");
-	//model.push_back("Bladesong Missile Boat.msh");
-	
+	path.push_back("Models/Mercedes/");
+	path.push_back("Models/House/");
+	path.push_back("Models/Bladesong.Missile.Boat/");
+	path.push_back("Models/Bus/");
+	path.push_back("Models/OldHouse/");
+	path.push_back("Models/BB8New/");
+
+	model.push_back("Mercedes.msh");
+	model.push_back("houseA_obj.msh");
+	model.push_back("Bladesong Missile Boat.msh");
+	model.push_back("Bus.msh");
+	model.push_back("OldHouse.msh");
+	model.push_back("BB8.msh");
+
+	//path.push_back("Models/low-poly-buildings/");
+	//path.push_back("Models/A380/");
+
+	//model.push_back("low-poly-buildings.msh");
+	//model.push_back("A380.msh");
+
 	for (int i = 0; i < path.size(); i++) {
 		_files.push_back(AddFile(path.at(i), model.at(i)));
 	}
