@@ -3,6 +3,7 @@
 * # André Martins
 */
 
+#pragma region Includes
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
@@ -11,7 +12,6 @@
 #endif
 
 #include <soil.h>
-
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -21,7 +21,9 @@
 #include "Navigation.h"
 #include "NavigationFly.h"
 #include "NavigationOrbit.h"
+#pragma endregion
 
+#pragma region Variáveis Globais
 SceneHelper _sceneHelper;
 Camera _camera;
 Navigation* _navigation;
@@ -39,6 +41,7 @@ const GLfloat light_position[] = { 2.0f, 5.0f, 5.0f, 0.0f };
 int wid = 800;
 int hei = 600;
 double T = 0, t1 = 0, t2 = 0;
+#pragma endregion
 
 #pragma region Funcoes de Desenho
 
@@ -390,7 +393,7 @@ static void key(unsigned char key, int x, int y)
 		break;
 	case '1':
 		_navigation = _navigationOrbit;
-		_navigation->KeyPress(key, x, y);
+		_navigation->KeyPress(key, x, y); //Internamente ativa o modo de seleção, case pressione 1
 		break;
 	case '2':
 		_navigation = _navigationOrbit;
@@ -398,12 +401,6 @@ static void key(unsigned char key, int x, int y)
 		break;
 	case '3':
 		_navigation = _navigationFly;
-		break;
-	case 'c':
-		_camera.UpdateDirectionByPivot();
-		break;
-	case 'v':
-		_camera.UpdatePositionByPivot();
 		break;
 	default:
 		_navigation->KeyPress(key, x, y);

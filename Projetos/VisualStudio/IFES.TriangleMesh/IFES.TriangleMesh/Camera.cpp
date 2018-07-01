@@ -11,7 +11,7 @@ Camera::~Camera()
 
 void Camera::UpdateDirectionByPivot()
 {
-	if(glm::distance(Pivot, Position) > 1)
+	if (glm::distance(Pivot, Position) > 4)
 		this->SetDirection(Pivot - Position);
 }
 
