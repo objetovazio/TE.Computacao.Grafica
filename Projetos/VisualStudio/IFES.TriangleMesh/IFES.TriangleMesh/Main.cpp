@@ -401,6 +401,7 @@ static void key(unsigned char key, int x, int y)
 		break;
 	case '3':
 		_navigation = _navigationFly;
+		_navigation->KeyPress(key, x, y);
 		break;
 	default:
 		_navigation->KeyPress(key, x, y);

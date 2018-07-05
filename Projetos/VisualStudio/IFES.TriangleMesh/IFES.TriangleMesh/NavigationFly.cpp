@@ -84,6 +84,8 @@ void NavigationFly::ZoomOut()
 
 void NavigationFly::KeyPress(unsigned char key, int x, int y) {
 	switch (key) {
+	case '3':
+		GetCamera()->SetDirection(glm::normalize(GetCamera()->GetDirection()));
 	case 'a':
 		MoveUp();
 		break;
